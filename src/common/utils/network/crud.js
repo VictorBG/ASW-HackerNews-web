@@ -27,7 +27,7 @@ function * doRequest (resource, request, success, fail, transform = (transform) 
         yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: false })
         if (!silent) {
             yield put({ type: CRUD_ERROR, message: null })
-            yield put({ type: CRUD_ERROR, message: error.message })
+            yield put({ type: CRUD_ERROR, message: error.response.data.message })
         }
         yield put({ type: fail, error })
     }
