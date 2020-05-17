@@ -50,13 +50,13 @@ export function apiCall (name, endpoint, transform = (transform) => transform) {
             const { fetchSuccess, fetchError } = typesFor(name)
             return doRequest(name, call(axios.get, endpoint), fetchSuccess, fetchError, transform)
         },
-        create: function () {
+        create: function (data) {
             const { createSuccess, createError } = typesFor(name)
-            return doRequest(name, call(axios.post, endpoint), createSuccess, createError, transform)
+            return doRequest(name, call(axios.post, endpoint, data), createSuccess, createError, transform)
         },
-        update: function () {
+        update: function (data) {
             const { updateSuccess, updateError } = typesFor(name)
-            return doRequest(name, call(axios.put, endpoint), updateSuccess, updateError, transform)
+            return doRequest(name, call(axios.put, endpoint, data), updateSuccess, updateError, transform)
         },
         delete: function () {
             const { deleteSuccess, deleteError } = typesFor(name)
