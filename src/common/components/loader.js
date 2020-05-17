@@ -8,7 +8,6 @@ export const LOADING_CHANGE = 'LOADING_CHANGE'
 
 export const linearLoadingReducer = createReducer({}, {
     [LOADING_CHANGE]: (state, { resourceName, loadingStatus }) => {
-        console.log(resourceName)
         return Object.assign({}, state, {
             [resourceName]: loadingStatus
         })

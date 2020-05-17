@@ -11,23 +11,31 @@
 export const typesFor = (name) => {
 
     const actionName = (action, result) =>
-        `${name.toUpperCase()}_${action.toUpperCase()}_${result.toUpperCase()}`
+        `${name}_${action}_${result}`
 
     return {
+        fetchStart: actionName(FETCH, START),
         fetchSuccess: actionName(FETCH, SUCCESS),
         fetchError: actionName(FETCH, ERROR),
+
+        createStart: actionName(CREATE, START),
         createSuccess: actionName(CREATE, SUCCESS),
         createError: actionName(CREATE, ERROR),
+
+        updateStart: actionName(UPDATE, START),
         updateSuccess: actionName(UPDATE, SUCCESS),
         updateError: actionName(UPDATE, ERROR),
+
+        deleteStart: actionName(DELETE, START),
         deleteSuccess: actionName(DELETE, SUCCESS),
         deleteError: actionName(DELETE, ERROR)
     }
 }
 
-const FETCH = 'fetch'
-const CREATE = 'create'
-const UPDATE = 'update'
-const DELETE = 'delete'
-const SUCCESS = 'success'
-const ERROR = 'error'
+export const FETCH = 'FETCH'
+export const CREATE = 'CREATE'
+export const UPDATE = 'UPDATE'
+export const DELETE = 'DELETE'
+export const SUCCESS = 'SUCCESS'
+export const ERROR = 'ERROR'
+export const START = 'START'
