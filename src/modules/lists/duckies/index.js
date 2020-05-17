@@ -17,7 +17,7 @@ const ENDPOINTS = [
     '/main',
     '/newest',
     '/urls',
-    'ask'
+    '/ask'
 ]
 
 export function * listsSaga () {
