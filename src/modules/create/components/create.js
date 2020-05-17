@@ -1,62 +1,85 @@
-import React from 'react'
-import { Card } from '@rmwc/card'
-import { Typography } from '@rmwc/typography'
+import React, {useState} from 'react'
+import {Card} from '@rmwc/card'
+import {Typography} from '@rmwc/typography'
 import styled from 'styled-components'
-import { Button } from '@rmwc/button'
-import { TextField } from '@rmwc/textfield'
-import { useDispatch, useSelector } from 'react-redux'
+import {Button} from '@rmwc/button'
+import {TextField} from '@rmwc/textfield'
+import {useDispatch, useSelector} from 'react-redux'
+import {postNewContribution} from "../duckies";
+import {Toolbar} from "../../../common/components/toolbar";
 
 export const CreateForm = () => {
+
+    // Para obtener el valor introducido en los campos de texto.
+    const [titleInput, setTitleInput] = useState('')
+    const [urlInput, setURLInput] = useState('')
+    const [textInput, setTextInput] = useState('')
+
+    const dispatch = useDispatch()
 
     const onClickButton = () => {
         addNewContribution()
     }
 
-    const addNewContribution = () => dispatch(postNewContribution())
+    // Payload es el "json" que se enviara en el POST
+    const addNewContribution = () => dispatch(postNewContribution({
+        payload: {
+            title: titleInput,
+            url: urlInput,
+            text: textInput
+        }
+    }))
 
     return (
-    <>
-        <Container>
-            <ContributionCard>
-                <Container>
-                    <Typography use="subtitle2" tag="h3">Title</Typography>
-                    <TextField outlined></TextField>
-                </Container>
-                <Container>
-                    <Typography use="subtitle2" tag="h3">URL</Typography>
-                    <TextField outlined></TextField>
-                </Container>
+        <>
+            <Toolbar></Toolbar>
+            <Container>
+                <FormCard>
+                    <Container>
+                        <Typography use="subtitle2" tag="h3">Title</Typography>
+                        <TextField outlined label="Title" onChange={({target: {name, value}}) => {
+                            setTitleInput(value)
+                        }}/>
+                    </Container>
+                    <Container>
+                        <Typography use="subtitle2" tag="h3">URL</Typography>
+                        <TextField outlined label="URL" onChange={({target: {name, value}}) => {
+                            setURLInput(value)
+                        }}></TextField>
+                    </Container>
 
-                <Container>
-                    <Typography use="subtitle2" tag="h3">OR</Typography>
-                </Container>
+                    <Container>
+                        <Typography use="subtitle2" tag="h3">OR</Typography>
+                    </Container>
 
-                <Container>
-                    <Typography use="subtitle2" tag="h3">Text</Typography>
-                    <TextField
-                        textarea
-                        outlined
-                        rows={4}
-                        cols={50}
-                        helpText={{
-                            persistent: true,
-                            validationMsg: true,
-                        }}
+                    <Container>
+                        <Typography use="subtitle2" tag="h3">Text</Typography>
+                        <TextField label="Your text"
+                                   textarea
+                                   outlined
+                                   rows={4}
+                                   cols={50}
+                                   helpText={{
+                                       persistent: true,
+                                       validationMsg: true,
+                                   }}
+                                   onChange={({target: {name, value}}) => {
+                                       setTextInput(value)
+                                   }}
+                        />
+                    </Container>
+                    <Button label='Submit' raised
+                            theme={['secondaryBg', 'primary']}
+                            onClick={() => onClickButton()}
                     />
-                </Container>
-                <Button label='Submit' raised
-                        theme={['secondaryBg', 'primary']}
-                        onClick={() => onClickButton()}
-                />
-            </ContributionCard>
-        </Container>
-    </>
+                </FormCard>
+            </Container>
+        </>
     )
 }
 
 
-
-const ContributionCard = styled(Card)`
+const FormCard = styled(Card)`
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom:20px;
@@ -65,6 +88,6 @@ const ContributionCard = styled(Card)`
     margin: 0 auto;
 `
 
-const  Container = styled.div`
+const Container = styled.div`
     padding: 1rem;
 `
