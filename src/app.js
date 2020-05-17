@@ -5,6 +5,7 @@ import { ListScreen } from './modules/lists/components/list-base-screen'
 import { SnackbarError } from './common/components/snackbar-error'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { Test } from './common/components/test'
+import { CreateForm } from './modules/create/components/create'
 
 function App () {
     return (
@@ -13,7 +14,7 @@ function App () {
             <BrowserRouter>
                 <Switch>
                     <Route path='/create'>
-                        <Test/>
+                        <CreateForm/>
                     </Route>
                     <Route path='/'>
                         <ListScreen/>

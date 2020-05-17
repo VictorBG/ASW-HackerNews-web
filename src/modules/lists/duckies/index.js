@@ -3,6 +3,7 @@ import { apiCall } from '../../../common/utils/network/crud'
 import { reducerFor } from '../../../common/utils/network/reducer-for'
 
 export const FETCH_LIST = 'FETCH_LIST'
+export const POST_CONTRIBUTION = 'POST_CONTRIBUTION'
 
 export const fetchList = index => ({ type: FETCH_LIST, index })
 

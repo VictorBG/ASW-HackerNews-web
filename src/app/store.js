@@ -5,6 +5,7 @@ import { setRequestDefaults } from '../common/utils/network/crud'
 import { errorReducer } from '../common/components/snackbar-error'
 import { BASE_URL_DEV } from '../common/constants/index'
 import { linearLoadingReducer } from '../common/components/loader'
+import {contributionSaga} from "../modules/create/duckies";
 
 const rootReducer = combineReducers({
     list: listsReducer,
@@ -18,6 +19,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware)))
 
 sagaMiddleware.run(listsSaga)
+sagaMiddleware.run(contributionSaga)
 
 // TODO: move header to when the login has been performed
 setRequestDefaults({
