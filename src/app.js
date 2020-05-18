@@ -29,7 +29,7 @@ function App() {
             <Route path='/create'>
               <CreateForm/>
             </Route>
-            <Route path='/user'>
+            <Route path='/user/:id'>
               <UserProfileForm/>
             </Route>
             <Route path='/'>

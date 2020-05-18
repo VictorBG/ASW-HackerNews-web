@@ -1,99 +1,137 @@
-import React, {useState} from 'react'
-import {Typography} from '@rmwc/typography'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import {TextField} from '@rmwc/textfield'
-import {useSelector} from "react-redux";
-import {ListToolbar} from "../../lists/components/list-toolbar";
-import {Card} from "@rmwc/card";
-import '@rmwc/select/styles';
-import {Select} from "@rmwc/select";
-import {Button} from "@rmwc/button"
-import '@rmwc/button/styles';
+import { TextField } from '@rmwc/textfield'
+import { useDispatch, useSelector } from 'react-redux'
+import { ListToolbar } from '../../lists/components/list-toolbar'
+import { Card } from '@rmwc/card'
+import '@rmwc/select/styles'
+import { Select } from '@rmwc/select'
+import { Button } from '@rmwc/button'
+import '@rmwc/button/styles'
+import { profile } from '../patitos/index'
+import { useHistory, useParams } from 'react-router-dom'
 
 export const UserProfileForm = () => {
-  const user = useSelector((state) => state.user)
+    const dispatch = useDispatch()
+    const loggedUser = useSelector((state) => state.user)
+    const userProfile = useSelector((state) => state.profile)
 
-  const [aboutInput, setAboutInput] = useState(user.about)
-  const [emailInput, setEmailInput] = useState('')
-  const [maxVisitInput, setMaxVisitInput] = useState('')
-  const [minAwayInput, setMinAwayInput] = useState('')
-  const [delayInput, setDelayInput] = useState('')
+    const { id } = useParams()
+    const history = useHistory()
 
+    const [aboutInput, setAboutInput] = useState('')
+    const [emailInput, setEmailInput] = useState('')
+    const [maxVisitInput, setMaxVisitInput] = useState('')
+    const [minAwayInput, setMinAwayInput] = useState('')
+    const [delayInput, setDelayInput] = useState('')
+    const [noProcast, setNoProcast] = useState('No')
+    const [showDead, setShowDead] = useState('No')
 
+    useEffect(() => {
+        dispatch(profile(id))
+    }, [])
 
-  return (<>
-        <ListToolbar></ListToolbar>
-        <FormCard>
-          <Divisor>
-            <label>User: {user.username}</label>
-          </Divisor>
-          <Divisor>
-            <label>Created At: {user.createdAt}</label>
-          </Divisor>
-          <Divisor>
-            <label>Karmita: {user.karma}</label>
-          </Divisor>
-          <Divisor>
-            <TextField label="Tell people things they don't care"
-                       textarea
-                       outlined
-                       rows={4}
-                       cols={50}
-                       helpText={{
-                         persistent: true,
-                         validationMsg: true,
-                       }}
-                       onChange={({target: {value}}) => {
-                         setAboutInput(value)
-                       }}
-            />
-          </Divisor>
-          <Divisor>
-            <TextField outlined label="Email"
-                       onChange={({target: {value}}) => {
-                         setEmailInput(value)
-                       }}></TextField>
-          </Divisor>
-          <Divisor>
-            <SmallerSelector
-                label="Showdead"
-                enhanced
-                options={['Yes', 'No']}
-            />
-          </Divisor>
-          <Divisor>
-            <SmallerSelector
-                label="Noprocast"
-                enhanced
-                options={['Yes', 'No']}
-            />
-          </Divisor>
-          <Divisor>
-            <TextField outlined label="Max Visit"
-                       onChange={({target: {value}}) => {
-                         setMaxVisitInput(value)
-                       }}></TextField>
-          </Divisor>
-          <Divisor>
-            <TextField outlined label="Min Away"
-                       onChange={({target: {value}}) => {
-                         setMinAwayInput(value)
-                       }}></TextField>
-          </Divisor>
-          <Divisor>
-            <TextField outlined label="Delay"
-                       onChange={({target: {value}}) => {
-                         setDelayInput(value)
-                       }}></TextField>
-          </Divisor>
-          <Divisor>
-            <Button label = "Update Profile"
-            raised/>
-          </Divisor>
-        </FormCard>
-      </>
-  )
+    useEffect(() => {
+        if (!!userProfile) {
+            setAboutInput(userProfile.about)
+            setEmailInput(userProfile.email)
+            setMaxVisitInput(userProfile.maxVisit)
+            setMinAwayInput(userProfile.minAway)
+            setDelayInput(userProfile.delay)
+            setNoProcast(userProfile.noprocast ? 'Yes' : 'No')
+            setShowDead(userProfile.showDead ? 'Yes' : 'No')
+        }
+    }, [userProfile])
 
+    // 5 is a random number to be out of range, so no tab is selected
+    return (<>
+            <ListToolbar onClick={(pos) => {
+                if (pos !== 5) {
+                    history.push(`/?id=${pos}`)
+                }
+            }} pos={5}/>
+            {!!userProfile &&
+            <FormCard>
+                <Divisor>
+                    <label>User: {userProfile.username}</label>
+                </Divisor>
+                <Divisor>
+                    <label>Created At: {userProfile.createdAt}</label>
+                </Divisor>
+                <Divisor>
+                    <label>Karmita: {userProfile.karma}</label>
+                </Divisor>
+                <Divisor>
+                    <CorrectlyColoredTextField label="Tell people things they don't care"
+                                               textarea
+                                               outlined
+                                               value={aboutInput}
+                                               rows={4}
+                                               cols={50}
+                                               helpText={{
+                                                   persistent: true,
+                                                   validationMsg: true
+                                               }}
+                                               onChange={({ target: { value } }) => {
+                                                   setAboutInput(value)
+                                               }}
+                                               theme={['onSecondary']}
+                    />
+                </Divisor>
+                <Divisor>
+                    <CorrectlyColoredTextField outlined label="Email"
+                                               value={emailInput}
+                                               onChange={({ target: { value } }) => {
+                                                   setEmailInput(value)
+                                               }}/>
+                </Divisor>
+                <Divisor>
+                    <SmallerSelector
+                        label="Showdead"
+                        value={showDead}
+                        enhanced
+                        options={['Yes', 'No']}
+                        onChange={(evt) => setShowDead(evt.currentTarget.value)}
+                    />
+                </Divisor>
+                <Divisor>
+                    <SmallerSelector
+                        label="Noprocast"
+                        value={noProcast}
+                        enhanced
+                        options={['Yes', 'No']}
+                        onChange={(evt) => setNoProcast(evt.currentTarget.value)}
+                    />
+                </Divisor>
+                <Divisor>
+                    <CorrectlyColoredTextField outlined label="Max Visit"
+                                               value={maxVisitInput}
+                                               onChange={({ target: { value } }) => {
+                                                   setMaxVisitInput(value)
+                                               }}/>
+                </Divisor>
+                <Divisor>
+                    <CorrectlyColoredTextField outlined label="Min Away"
+                                               value={minAwayInput}
+                                               onChange={({ target: { value } }) => {
+                                                   setMinAwayInput(value)
+                                               }}/>
+                </Divisor>
+                <Divisor>
+                    <CorrectlyColoredTextField outlined label="Delay"
+                                               value={delayInput}
+                                               onChange={({ target: { value } }) => {
+                                                   setDelayInput(value)
+                                               }}/>
+                </Divisor>
+                <Divisor>
+                    <Button label="Update Profile"
+                            raised/>
+                </Divisor>
+            </FormCard>
+            }
+        </>
+    )
 }
 
 const Divisor = styled.div`
@@ -109,11 +147,16 @@ const FormCard = styled(Card)`
     margin: 0 auto;
 `
 
-const FuckingSimetricTextField = styled(TextField) `
+const CorrectlyColoredTextField = styled(TextField)`
+    --mdc-theme-primary: #ff6600;
+`
+
+const FuckingSimetricTextField = styled(TextField)`
   pref-width: 180px;
   width: 180px;
 `
 
 const SmallerSelector = styled(Select)`
     max-width: 215px;
+     --mdc-theme-primary: #ff6600;
 `

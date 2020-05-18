@@ -1,16 +1,15 @@
-import {apiCall} from "../../../common/utils/network/crud";
+import { apiCall } from '../../../common/utils/network/crud'
 import { fork, put, takeLatest } from 'redux-saga/effects'
-import {reducerFor} from "../../../common/utils/network/reducer-for";
+import { reducerFor } from '../../../common/utils/network/reducer-for'
 
 export const USER_PROFILE = 'USER_PROFILE'
 
-export const profile = (id) => ({type: USER_PROFILE, id})
+export const profile = (id) => ({ type: USER_PROFILE, id })
 
-export const userReducer = reducerFor(USER_PROFILE, [])
+export const userReducer = reducerFor(USER_PROFILE, null)
 
 function * handleUserProfile ({ id }) {
-
-  yield put(apiCall(USER_PROFILE, `/user/${id}`).fetch())
+    yield put(apiCall(USER_PROFILE, `/user/${id}`).fetch())
 }
 
 // function * handleUpdateProfile ({ payload }) {
@@ -18,9 +17,9 @@ function * handleUserProfile ({ id }) {
 // }
 
 export function * profileSaga () {
-  function * watchProfile () {
-    yield takeLatest(USER_PROFILE, handleUserProfile)
-  }
+    function * watchProfile () {
+        yield takeLatest(USER_PROFILE, handleUserProfile)
+    }
 
-  yield fork(watchProfile)
+    yield fork(watchProfile)
 }
