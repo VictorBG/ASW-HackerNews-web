@@ -3,7 +3,7 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { crudSaga, setRequestDefaults } from '../common/utils/network/crud'
 import { errorReducer } from '../common/components/snackbar-error'
-import { BASE_URL_DEV } from '../common/constants/index'
+import { BASE_URL_DEV, BASE_URL_PROD } from '../common/constants/index'
 import { linearLoadingReducer } from '../common/components/loader'
 import { contributionSaga } from '../modules/create/duckies'
 
@@ -24,7 +24,7 @@ sagaMiddleware.run(contributionSaga)
 
 // TODO: move header to when the login has been performed
 setRequestDefaults({
-    baseURL: BASE_URL_DEV,
+    baseURL: __DEV__ ? BASE_URL_DEV : BASE_URL_PROD,
     headers: {
         common: {
             'Authorization': 'eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJqZWlrZXJuaXVzIiwiaWF0IjoxNTg5MDE0MjAxLCJzdWIiOiIxMTUyMTU0NzQxNzkzNDM3IiwianRpIjoiZGZjNDJlM2MtMGY1Ny00NTBhLTk4ZGUtNGE3YmJkNWIxMzc2In0.luTO2b3MPXtl72PtfYchB33Ux-S1mxy6IqSMxehubEF9ZmAubZRisHtahende1nu'
