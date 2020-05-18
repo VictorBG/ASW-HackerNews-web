@@ -20,13 +20,15 @@ function * doRequest (resource, request, success, fail, transform = (transform) 
 
     if (!axios.defaults.headers.common.Authorization) {
         const user = yield select((state) => state.user)
-        setRequestDefaults({
-            headers: {
-                common: {
-                    'Authorization': user.token
+        if (!!user) {
+            setRequestDefaults({
+                headers: {
+                    common: {
+                        'Authorization': user.token
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     try {
@@ -37,7 +39,7 @@ function * doRequest (resource, request, success, fail, transform = (transform) 
         // dispatches a CRUD_ERROR so the error snackbar can be shown
         // it first dispatches a null CRUD_ERROR to remove any previous error
         yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: false })
-        const message = !!error.status ? error.response.data.message : 'Could not connect to the server'
+        const message = !!error.response.data.message? error.response.data.message : 'Could not connect to the server'
         if (!silent) {
             yield put({ type: CRUD_ERROR, message: null })
             yield put({ type: CRUD_ERROR, message })

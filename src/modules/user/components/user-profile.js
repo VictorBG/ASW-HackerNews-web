@@ -10,6 +10,9 @@ import { Button } from '@rmwc/button'
 import '@rmwc/button/styles'
 import { profile } from '../patitos/index'
 import { useHistory, useParams } from 'react-router-dom'
+import {updateProfile} from "../patitos";
+import {Typography} from "@rmwc/typography";
+import {formatTimeAgo} from "../../../common/utils/format/time";
 
 export const UserProfileForm = () => {
     const dispatch = useDispatch()
@@ -33,7 +36,7 @@ export const UserProfileForm = () => {
 
     useEffect(() => {
         dispatch(profile(id))
-    }, [])
+    }, [id])
 
     useEffect(() => {
         if (!!userProfile) {
@@ -47,6 +50,23 @@ export const UserProfileForm = () => {
         }
     }, [userProfile])
 
+
+    const updateForm = () => dispatch(updateProfile({
+        payload: {
+            about: aboutInput,
+            uemail: emailInput,
+            maxv: maxVisitInput,
+            mina: minAwayInput,
+            delay: delayInput,
+            nopro: noProcast === 'Yes',
+            showd: showDead === 'Yes'
+        }
+    } , loggedUser.id))
+
+    const onUpdateClick = () => {
+        updateForm()
+    }
+
     // 5 is a random number to be out of range, so no tab is selected
     return (<>
             <ListToolbar onClick={(pos) => {
@@ -57,33 +77,42 @@ export const UserProfileForm = () => {
             {!!userProfile &&
             <FormCard>
                 <Divisor>
-                    <label>User: {userProfile.username}</label>
+                    <PinkText use="headline4">{userProfile.username}</PinkText>
                 </Divisor>
                 <Divisor>
-                    <label>Created At: {userProfile.createdAt}</label>
+                    <label>Created At: {formatTimeAgo(userProfile.createdAt)}</label>
                 </Divisor>
                 <Divisor>
                     <label>Karmita: {userProfile.karma}</label>
                 </Divisor>
                 <Divisor>
-                    <CorrectlyColoredTextField label="Tell people things they don't care"
-                                               textarea
-                                               outlined
-                                               value={aboutInput}
-                                               rows={4}
-                                               cols={50}
-                                               helpText={{
-                                                   persistent: true,
-                                                   validationMsg: true
-                                               }}
-                                               onChange={({ target: { value } }) => {
-                                                   setAboutInput(value)
-                                               }}
-                                               theme={['onSecondary']}
+                    {loggedUser.id == userProfile.id &&
+                    <CustomTextField label="Tell people things they don't care"
+                                     textarea
+                                     outlined
+                                     value={aboutInput}
+                                     rows={4}
+                                     cols={50}
+                                     helpText={{
+                                         persistent: true,
+                                         validationMsg: true
+                                     }}
+                                     onChange={({target: {value}}) => {
+                                         setAboutInput(value)
+                                     }}
+                                     theme={['onSecondary']}
+
                     />
+                    }
+
+                    {loggedUser.id != userProfile.id &&
+                    <Typography use="body1">
+                        {aboutInput}
+                    </Typography>
+                    }
                 </Divisor>
                 <Divisor>
-                    <CorrectlyColoredTextField outlined label="Email"
+                    <CustomTextField outlined label="Email"
                                                value={emailInput}
                                                onChange={({ target: { value } }) => {
                                                    setEmailInput(value)
@@ -108,30 +137,31 @@ export const UserProfileForm = () => {
                     />
                 </Divisor>
                 <Divisor>
-                    <CorrectlyColoredTextField outlined label="Max Visit"
+                    <CustomTextField outlined label="Max Visit"
                                                value={maxVisitInput}
                                                onChange={({ target: { value } }) => {
                                                    setMaxVisitInput(value)
                                                }}/>
                 </Divisor>
                 <Divisor>
-                    <CorrectlyColoredTextField outlined label="Min Away"
+                    <CustomTextField outlined label="Min Away"
                                                value={minAwayInput}
                                                onChange={({ target: { value } }) => {
                                                    setMinAwayInput(value)
                                                }}/>
                 </Divisor>
                 <Divisor>
-                    <CorrectlyColoredTextField outlined label="Delay"
+                    <CustomTextField outlined label="Delay"
                                                value={delayInput}
                                                onChange={({ target: { value } }) => {
                                                    setDelayInput(value)
                                                }}/>
                 </Divisor>
                 <Divisor>
-                    <Button label="Update Profile"
-                            raised/>
-                    <Button label="Logout"
+                    <CustomButton label="Update Profile"
+                            raised
+                            onClick = {() => onUpdateClick()}/>
+                    <CustomButton label="Logout"
                             onClick={logout}
                             danger/>
                 </Divisor>
@@ -154,16 +184,27 @@ const FormCard = styled(Card)`
     margin: 0 auto;
 `
 
-const CorrectlyColoredTextField = styled(TextField)`
+const CustomTextField = styled(TextField)`
+    width: 100%;
+
     --mdc-theme-primary: #ff6600;
 `
 
-const FuckingSimetricTextField = styled(TextField)`
-  pref-width: 180px;
-  width: 180px;
+const CustomButton = styled(Button)`
+  width: 50%
+
 `
 
 const SmallerSelector = styled(Select)`
-    max-width: 215px;
+    width: 100%;
+
      --mdc-theme-primary: #ff6600;
+`
+const PinkText = styled(Typography) `
+    color: #FF0080 
+`
+
+const CenteredContainer = styled.div`
+    float: none;
+    margin: 0 auto;
 `
