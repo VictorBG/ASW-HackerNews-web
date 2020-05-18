@@ -14,7 +14,6 @@ function * handlePostContribution ({ payload }) {
     const [success] = yield race([take(createSuccess), take(createError)])
     if (success) {
         // Redirect
-
     }
 }
 
