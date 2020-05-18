@@ -8,6 +8,7 @@ import {CreateForm} from './modules/create/components/create'
 import {useDispatch, useSelector} from "react-redux";
 import FacebookLogin from 'react-facebook-login';
 import {login} from "./common/auth";
+import {UserProfileForm} from "./modules/user/components/user-profile";
 
 function App() {
   const user = useSelector((state) => state.user)
@@ -27,6 +28,9 @@ function App() {
           <Switch>
             <Route path='/create'>
               <CreateForm/>
+            </Route>
+            <Route path='/user'>
+              <UserProfileForm/>
             </Route>
             <Route path='/'>
               <ListScreen/>

@@ -7,12 +7,14 @@ import { BASE_URL_DEV, BASE_URL_PROD } from '../common/constants/index'
 import { linearLoadingReducer } from '../common/components/loader'
 import { contributionSaga } from '../modules/create/duckies'
 import {loginReducer, loginSaga} from "../common/auth";
+import {profileSaga, userReducer} from "../modules/user/patitos";
 
 const rootReducer = combineReducers({
     list: listsReducer,
     error: errorReducer,
     loading: linearLoadingReducer,
-    user : loginReducer
+    user : loginReducer,
+    profile: userReducer
 })
 
 const sagaMiddleware = createSagaMiddleware()
@@ -24,6 +26,7 @@ sagaMiddleware.run(crudSaga)
 sagaMiddleware.run(listsSaga)
 sagaMiddleware.run(contributionSaga)
 sagaMiddleware.run(loginSaga)
+sagaMiddleware.run(profileSaga)
 
 // TODO: move header to when the login has been performed
 setRequestDefaults({

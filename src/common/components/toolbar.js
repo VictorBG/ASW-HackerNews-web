@@ -4,14 +4,23 @@ import {
   TopAppBarRow,
   TopAppBarSection
 } from '@rmwc/top-app-bar'
-import React from 'react'
+import React, {useCallback} from 'react'
 import styled from 'styled-components'
 import {Button} from '@rmwc/button'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import { useHistory } from "react-router-dom";
 
 export const Toolbar = ({children, showUser = true}) => {
 
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
+
+  const history = useHistory()
+
+  const goToProfile = useCallback(() => {
+    history.push(`/user/${user.id}`)
+  }, [])
+
 
   return (<>
         <TopAppBar fixed>
@@ -22,7 +31,9 @@ export const Toolbar = ({children, showUser = true}) => {
             {!!showUser &&
             <TopAppBarSection alignEnd>
               <StyledUsernameText label= {`${user.username} (${user.karma})`}
-                                  theme={['onSecondary']}/>
+                                  theme={['onSecondary']}
+                                  onClick = {goToProfile}
+                                  />
             </TopAppBarSection>
             }
           </TopAppBarRow>
