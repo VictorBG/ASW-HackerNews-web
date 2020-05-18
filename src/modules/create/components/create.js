@@ -93,7 +93,8 @@ const CenteredContainer = styled.div`
 `
 
 const StyledTextField = styled(TextField)`
-    width: 50rem;
+    width: 42vw;
+    margin: auto;
 `
 const StyledButton = styled(Button)`
     width: 70%;
