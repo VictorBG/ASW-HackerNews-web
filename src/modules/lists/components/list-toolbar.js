@@ -18,7 +18,7 @@ export const ListToolbar = ({ onClick, pos = 0 }) => {
 
     const submit = useCallback(() => {
         history.push(('/create'))
-    }, [])
+    }, [history])
 
     useEffect(() => {
         onClick(position)

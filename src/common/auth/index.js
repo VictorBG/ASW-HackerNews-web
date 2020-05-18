@@ -9,7 +9,6 @@ export const login = (id, userName) => ({type: LOGIN, id, userName})
 export const loginReducer = reducerFor(LOGIN, null)
 
 function* handleLogin({id, userName}) {
-  console.log(id, userName)
   yield put(apiCall(LOGIN, '/user').create({id, userName}))
 }
 

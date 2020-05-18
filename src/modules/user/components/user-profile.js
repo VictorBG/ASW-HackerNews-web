@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { TextField } from '@rmwc/textfield'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,6 +26,10 @@ export const UserProfileForm = () => {
     const [delayInput, setDelayInput] = useState('')
     const [noProcast, setNoProcast] = useState('No')
     const [showDead, setShowDead] = useState('No')
+
+    const logout = useCallback(() => {
+        dispatch({ type: 'LOGOUT' })
+    })
 
     useEffect(() => {
         dispatch(profile(id))
@@ -127,6 +131,9 @@ export const UserProfileForm = () => {
                 <Divisor>
                     <Button label="Update Profile"
                             raised/>
+                    <Button label="Logout"
+                            onClick={logout}
+                            danger/>
                 </Divisor>
             </FormCard>
             }

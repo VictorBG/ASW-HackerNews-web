@@ -26,6 +26,7 @@ const rootReducer = persistReducer({
 }, (state, action) => {
     if (action.type === 'LOGOUT') {
         state = undefined
+        setRequestDefaults({ baseURL: BASE_URL_DEV })
     }
     return appReducer(state, action)
 })
@@ -42,14 +43,6 @@ sagaMiddleware.run(contributionSaga)
 sagaMiddleware.run(loginSaga)
 sagaMiddleware.run(profileSaga)
 
-// TODO: move header to when the login has been performed
-setRequestDefaults({
-    baseURL: BASE_URL_DEV,
-    headers: {
-        common: {
-            'Authorization': 'eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJqZWlrZXJuaXVzIiwiaWF0IjoxNTg5MDE0MjAxLCJzdWIiOiIxMTUyMTU0NzQxNzkzNDM3IiwianRpIjoiZGZjNDJlM2MtMGY1Ny00NTBhLTk4ZGUtNGE3YmJkNWIxMzc2In0.luTO2b3MPXtl72PtfYchB33Ux-S1mxy6IqSMxehubEF9ZmAubZRisHtahende1nu'
-        }
-    }
-})
+setRequestDefaults({ baseURL: BASE_URL_DEV })
 
 export default store
