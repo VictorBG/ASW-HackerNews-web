@@ -6,11 +6,13 @@ import { errorReducer } from '../common/components/snackbar-error'
 import { BASE_URL_DEV, BASE_URL_PROD } from '../common/constants/index'
 import { linearLoadingReducer } from '../common/components/loader'
 import { contributionSaga } from '../modules/create/duckies'
+import {loginReducer, loginSaga} from "../common/auth";
 
 const rootReducer = combineReducers({
     list: listsReducer,
     error: errorReducer,
-    loading: linearLoadingReducer
+    loading: linearLoadingReducer,
+    user : loginReducer
 })
 
 const sagaMiddleware = createSagaMiddleware()
@@ -21,10 +23,11 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMidd
 sagaMiddleware.run(crudSaga)
 sagaMiddleware.run(listsSaga)
 sagaMiddleware.run(contributionSaga)
+sagaMiddleware.run(loginSaga)
 
 // TODO: move header to when the login has been performed
 setRequestDefaults({
-    baseURL: __DEV__ ? BASE_URL_DEV : BASE_URL_PROD,
+    baseURL: BASE_URL_DEV ,
     headers: {
         common: {
             'Authorization': 'eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJqZWlrZXJuaXVzIiwiaWF0IjoxNTg5MDE0MjAxLCJzdWIiOiIxMTUyMTU0NzQxNzkzNDM3IiwianRpIjoiZGZjNDJlM2MtMGY1Ny00NTBhLTk4ZGUtNGE3YmJkNWIxMzc2In0.luTO2b3MPXtl72PtfYchB33Ux-S1mxy6IqSMxehubEF9ZmAubZRisHtahende1nu'
