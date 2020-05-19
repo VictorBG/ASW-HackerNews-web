@@ -1,4 +1,4 @@
-import { fork, takeLatest } from 'redux-saga/effects'
+import { fork, put, takeLatest } from 'redux-saga/effects'
 import { apiCall } from '../../../common/utils/network/crud'
 import { reducerFor } from '../../../common/utils/network/reducer-for'
 
@@ -9,7 +9,7 @@ export const fetchList = index => ({ type: FETCH_LIST, index })
 export const listsReducer = reducerFor(FETCH_LIST, [])
 
 function * handleFetchList ({ index }) {
-    yield apiCall(FETCH_LIST, ENDPOINTS[index], data => data.items).fetch()
+    yield put(apiCall(FETCH_LIST, ENDPOINTS[index], data => data.items).fetch())
 }
 
 const ENDPOINTS = [

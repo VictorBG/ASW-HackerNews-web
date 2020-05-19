@@ -1,11 +1,11 @@
 import { listsReducer, listsSaga } from '../modules/lists/duckies/index'
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { setRequestDefaults } from '../common/utils/network/crud'
+import { crudSaga, setRequestDefaults } from '../common/utils/network/crud'
 import { errorReducer } from '../common/components/snackbar-error'
 import { BASE_URL_DEV } from '../common/constants/index'
 import { linearLoadingReducer } from '../common/components/loader'
-import {contributionSaga} from "../modules/create/duckies";
+import { contributionSaga } from '../modules/create/duckies'
 
 const rootReducer = combineReducers({
     list: listsReducer,
@@ -18,6 +18,7 @@ const sagaMiddleware = createSagaMiddleware()
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware)))
 
+sagaMiddleware.run(crudSaga)
 sagaMiddleware.run(listsSaga)
 sagaMiddleware.run(contributionSaga)
 

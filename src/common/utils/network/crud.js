@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { call, put } from 'redux-saga/effects'
+import { call, fork, put, takeEvery } from 'redux-saga/effects'
 import { CRUD_ERROR } from '../../components/snackbar-error'
-import { typesFor } from './types-for'
+import { CREATE, DELETE, FETCH, START, typesFor, UPDATE } from './types-for'
 import { LOADING_CHANGE } from '../../components/loader'
 
 /**
@@ -13,8 +13,9 @@ import { LOADING_CHANGE } from '../../components/loader'
  * @param success      type to dispatch when the call succeeds
  * @param fail         type to dispatch when the call fails
  * @param transform    Transform to apply to the data of the call when it is dispatched
+ * @param silent
  */
-function * doRequest (resource, request, success, fail, transform = (transform) => transform) {
+function * doRequest (resource, request, success, fail, transform = (transform) => transform, silent = false) {
     yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: true })
     try {
         const response = yield request
@@ -24,8 +25,10 @@ function * doRequest (resource, request, success, fail, transform = (transform) 
         // dispatches a CRUD_ERROR so the error snackbar can be shown
         // it first dispatches a null CRUD_ERROR to remove any previous error
         yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: false })
-        yield put({ type: CRUD_ERROR, message: null })
-        yield put({ type: CRUD_ERROR, message: error.message })
+        if (!silent) {
+            yield put({ type: CRUD_ERROR, message: null })
+            yield put({ type: CRUD_ERROR, message: error.response.data.message })
+        }
         yield put({ type: fail, error })
     }
 }
@@ -39,30 +42,85 @@ function * doRequest (resource, request, success, fail, transform = (transform) 
  *
  * It also accepts a transform function to transform the response data of the call
  *
- * @param name
- * @param endpoint
- * @param transform
- * @returns {{fetch: (function(): Generator<*|<"PUT", PutEffectDescriptor<{data: *, type: *}>>|<"PUT", PutEffectDescriptor<{type: string, message: *}>>|<"PUT", PutEffectDescriptor<{type: *, error: *}>>, void, *>), create: (function(): Generator<*|<"PUT", PutEffectDescriptor<{data: *, type: *}>>|<"PUT", PutEffectDescriptor<{type: string, message: *}>>|<"PUT", PutEffectDescriptor<{type: *, error: *}>>, void, *>), update: (function(): Generator<*|<"PUT", PutEffectDescriptor<{data: *, type: *}>>|<"PUT", PutEffectDescriptor<{type: string, message: *}>>|<"PUT", PutEffectDescriptor<{type: *, error: *}>>, void, *>), delete: (function(): Generator<*|<"PUT", PutEffectDescriptor<{data: *, type: *}>>|<"PUT", PutEffectDescriptor<{type: string, message: *}>>|<"PUT", PutEffectDescriptor<{type: *, error: *}>>, void, *>)}}
  */
+function crudHandlers () {
+    return {
+        fetch: function (action) {
+            const { fetchSuccess, fetchError } = typesFor(action.name)
+            return doRequest(action.name, call(axios.get, action.endpoint), fetchSuccess, fetchError, action.transform, action.silent)
+        },
+        create: function (action) {
+            const { createSuccess, createError } = typesFor(action.name)
+            return doRequest(action.name, call(axios.post, action.endpoint, action.data), createSuccess, createError, action.transform, action.silent)
+        },
+        update: function (action) {
+            const { updateSuccess, updateError } = typesFor(action.name)
+            return doRequest(action.name, call(axios.put, action.endpoint, action.data), updateSuccess, updateError, action.transform, action.silent)
+        },
+        delete: function (action) {
+            const { deleteSuccess, deleteError } = typesFor(action.name)
+            return doRequest(action.name, call(axios.delete, action.endpoint), deleteSuccess, deleteError, action.transform, action.silent)
+        }
+    }
+}
+
 export function apiCall (name, endpoint, transform = (transform) => transform) {
     return {
         fetch: function () {
-            const { fetchSuccess, fetchError } = typesFor(name)
-            return doRequest(name, call(axios.get, endpoint), fetchSuccess, fetchError, transform)
+            const { fetchStart } = typesFor(name)
+            return { type: fetchStart, name, endpoint, transform }
         },
         create: function (data) {
-            const { createSuccess, createError } = typesFor(name)
-            return doRequest(name, call(axios.post, endpoint, data), createSuccess, createError, transform)
+            const { createStart } = typesFor(name)
+            return { type: createStart, name, endpoint, transform, data }
         },
         update: function (data) {
-            const { updateSuccess, updateError } = typesFor(name)
-            return doRequest(name, call(axios.put, endpoint, data), updateSuccess, updateError, transform)
+            const { updateStart } = typesFor(name)
+            return { type: updateStart, name, endpoint, transform, data }
         },
         delete: function () {
-            const { deleteSuccess, deleteError } = typesFor(name)
-            return doRequest(name, call(axios.delete, endpoint), deleteSuccess, deleteError, transform)
+            const { deleteStart } = typesFor(name)
+            return { type: deleteStart, name, endpoint, transform }
+        },
+        fetchSilent: function () {
+            return { ...this.fetch(), silent: true }
+        },
+        createSilent: function (data) {
+            return { ...this.create(data), silent: true }
+        },
+        updateSilent: function (data) {
+            return { ...this.update(data), silent: true }
+        },
+        deleteSilent: function () {
+            return { ...this.delete(), silent: true }
         }
     }
+}
+
+export function * crudSaga () {
+    const start = (a) => (action) => action.type.endsWith(`${a}_${START}`)
+    const handlers = crudHandlers()
+
+    function * watchFetch () {
+        yield takeEvery(start(FETCH), handlers.fetch)
+    }
+
+    function * watchCreate () {
+        yield takeEvery(start(CREATE), handlers.create)
+    }
+
+    function * watchUpdate () {
+        yield takeEvery(start(UPDATE), handlers.update)
+    }
+
+    function * watchDelete () {
+        yield takeEvery(start(DELETE), handlers.delete)
+    }
+
+    yield fork(watchFetch)
+    yield fork(watchUpdate)
+    yield fork(watchCreate)
+    yield fork(watchDelete)
 }
 
 /**
