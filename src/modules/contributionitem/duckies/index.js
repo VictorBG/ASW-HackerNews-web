@@ -1,4 +1,4 @@
-import { fork, put, takeLatest } from 'redux-saga/effects'
+import { fork, put, race, take, takeLatest } from 'redux-saga/effects'
 import { apiCall } from '../../../common/utils/network/crud'
 import { typesFor } from '../../../common/utils/network/types-for'
 import { createReducer } from '@reduxjs/toolkit'
@@ -24,15 +24,20 @@ function * handleContribution ({ id }) {
     yield put(apiCall(GET_CONTRIBUTION, `/item?itemid=${id}`).fetch())
 }
 
-function * handlePostComment ({ payload }) {
-    /*yield put(apiCall(POST_COMMENT, "/item").create(payload))
+function * handlePostComment ({data}) {
+    let payload = (({parentId, text}) => ({parentId, text}))(data)
+    yield put(apiCall(POST_COMMENT, "/item/comment").create(payload))
 
     // Para determinar si ha habido exito o no al lanzar la petición.
     const {createSuccess, createError} = typesFor(POST_COMMENT)
     const [success] = yield race([take(createSuccess), take(createError)])
     if (success) {
-        // Redirect
-    }*/
+        if (data.contributionTopParentId === 0) {
+            data.h.go(0)
+        } else {
+            data.h.push('/item/' + data.contributionTopParentId)
+        }
+    }
 }
 
 export function * contributionDetailsSaga () {

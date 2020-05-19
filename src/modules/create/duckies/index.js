@@ -6,14 +6,16 @@ export const POST_CONTRIBUTION = 'POST_CONTRIBUTION'
 
 export const postNewContribution = (data) => ({ type: POST_CONTRIBUTION, ...data })
 
-function * handlePostContribution ({ payload }) {
+function * handlePostContribution ({ data }) {
+    let payload = (({title, url, text}) => ({title, url, text}))(data)
     yield put(apiCall(POST_CONTRIBUTION, "/item").create(payload))
 
     // Para determinar si ha habido exito o no al lanzar la petición.
     const {createSuccess, createError} = typesFor(POST_CONTRIBUTION)
     const [success] = yield race([take(createSuccess), take(createError)])
     if (success) {
-        // Redirect
+        //TODO: Change this to /newest or similar
+        data.h.push('/')
     }
 }
 
