@@ -6,6 +6,7 @@ import { SnackbarError } from './common/components/snackbar-error'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { Test } from './common/components/test'
 import { CreateForm } from './modules/create/components/create'
+import {ContributionForm} from "./modules/contributionitem/components/contribution";
 
 function App () {
     return (
@@ -15,6 +16,9 @@ function App () {
                 <Switch>
                     <Route path='/create'>
                         <CreateForm/>
+                    </Route>
+                    <Route path='/item/:id'>
+                        <ContributionForm/>
                     </Route>
                     <Route path='/'>
                         <ListScreen/>

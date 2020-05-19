@@ -6,11 +6,13 @@ import { errorReducer } from '../common/components/snackbar-error'
 import { BASE_URL_DEV } from '../common/constants/index'
 import { linearLoadingReducer } from '../common/components/loader'
 import { contributionSaga } from '../modules/create/duckies'
+import {contributionDetailsReducer, contributionDetailsSaga} from "../modules/contributionitem/duckies";
 
 const rootReducer = combineReducers({
     list: listsReducer,
     error: errorReducer,
-    loading: linearLoadingReducer
+    loading: linearLoadingReducer,
+    contributionDetails: contributionDetailsReducer
 })
 
 const sagaMiddleware = createSagaMiddleware()
@@ -21,6 +23,7 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMidd
 sagaMiddleware.run(crudSaga)
 sagaMiddleware.run(listsSaga)
 sagaMiddleware.run(contributionSaga)
+sagaMiddleware.run(contributionDetailsSaga)
 
 // TODO: move header to when the login has been performed
 setRequestDefaults({
