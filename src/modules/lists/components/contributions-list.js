@@ -9,6 +9,9 @@ import { LinkBadge } from './link-badge'
 import { isLink } from '../../../common/utils/format/text'
 import { IconButton } from '@rmwc/icon-button'
 import { Tooltip } from '@rmwc/tooltip'
+ import {upVotePostIfPossible} from '../duckies'
+ import {unVotePostIfPossible} from '../duckies'
+ import {postNewContribution} from "../../create/duckies";
 
 export const ContributionsList = ({ list }) => (
     <>
@@ -20,6 +23,7 @@ export const ContributionsList = ({ list }) => (
                             checked={item.liked}
                             onIcon="arrow_drop_down"
                             icon="arrow_drop_up"
+                            onClick={() => onClickButton(checked, item)}
                         />
                     </Tooltip>
                     <Typography use='headline5' tag='div'>{item.points}</Typography>
@@ -58,6 +62,14 @@ export const ContributionsList = ({ list }) => (
         )}
     </>
 )
+
+ const onClickButton = (checked, item) => {
+     if(checked) upVote(item)
+     else unVote(item)
+ }
+
+ const upVote = () => dispatch(upVotePostIfPossible())
+ const unVote = () => dispatch(unVotePostIfPossible())
 
 const ContributionCard = styled(Card)`
     margin-bottom: 20px;
