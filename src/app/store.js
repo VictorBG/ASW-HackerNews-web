@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
     list: listsReducer,
     error: errorReducer,
     loading: linearLoadingReducer,
-    contributionDetails: contributionDetailsReducer
+    contributionDetails: contributionDetailsReducer()
 })
 
 const sagaMiddleware = createSagaMiddleware()

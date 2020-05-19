@@ -1,18 +1,26 @@
-import { fork, put, race, take, takeLatest } from 'redux-saga/effects'
+import { fork, put, takeLatest } from 'redux-saga/effects'
 import { apiCall } from '../../../common/utils/network/crud'
 import { typesFor } from '../../../common/utils/network/types-for'
-import {reducerFor} from '../../../common/utils/network/reducer-for'
+import { createReducer } from '@reduxjs/toolkit'
 
 export const GET_CONTRIBUTION = 'GET_CONTRIBUTION'
 export const POST_COMMENT = 'POST_COMMENT'
 
-export const contributionDetails = (id) => ({type: GET_CONTRIBUTION, id})
+export const contributionDetails = (id) => ({ type: GET_CONTRIBUTION, id })
 export const postComment = (data) => ({ type: POST_COMMENT, ...data })
 
-export const contributionDetailsReducer = reducerFor(GET_CONTRIBUTION);
+export function contributionDetailsReducer () {
+    const actionTypes = typesFor(GET_CONTRIBUTION)
+    return createReducer({}, {
+        [actionTypes.fetchSuccess]: (state, { data }) => {
+            return Object.assign({}, state, {
+                [data.id]: data
+            })
+        }
+    })
+}
 
-function * handleContribution({id}) {
-    console.log("Ruta: " + `/item?itemid=${id}`)
+function * handleContribution ({ id }) {
     yield put(apiCall(GET_CONTRIBUTION, `/item?itemid=${id}`).fetch())
 }
 
@@ -28,9 +36,9 @@ function * handlePostComment ({ payload }) {
 }
 
 export function * contributionDetailsSaga () {
-   function * watchGetContribution () {
-       yield takeLatest(GET_CONTRIBUTION, handleContribution)
-   }
+    function * watchGetContribution () {
+        yield takeLatest(GET_CONTRIBUTION, handleContribution)
+    }
 
     function * watchPostComment () {
         yield takeLatest(POST_COMMENT, handlePostComment)

@@ -1,22 +1,20 @@
-import React, {useEffect, useState} from 'react'
-import {Typography} from '@rmwc/typography'
-import {useDispatch, useSelector} from 'react-redux'
-import {contributionDetails, postComment} from "../duckies";
-import {useParams} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Typography } from '@rmwc/typography'
+import { useDispatch, useSelector } from 'react-redux'
+import { contributionDetails, postComment } from '../duckies'
+import { useParams } from 'react-router-dom'
 
 export const ContributionForm = () => {
-    const dispatch = useDispatch()
-    const contributionDetailsUI = useSelector((state) => state.contributionDetails)
+    const { id } = useParams()
 
-    const {id} = useParams()
+    const dispatch = useDispatch()
+    const contributionDetailsUI = useSelector((state) => state.contributionDetails[id])
 
     useEffect(() => {
         dispatch(contributionDetails(id))
     }, [id])
 
-    console.log(contributionDetailsUI.comments)
-
-    const [textComment, setTextComment] = useState('');
+    const [textComment, setTextComment] = useState('')
 
     const createComment = () => dispatch(postComment({
         payload: {
@@ -31,9 +29,15 @@ export const ContributionForm = () => {
 
     return (
         <>
-            <Typography use="headline1">ID: {contributionDetailsUI.id}</Typography>
-            <Typography use="headline1">{contributionDetailsUI.content}</Typography>
-
+            {!!contributionDetailsUI &&
+            <div>
+                <Typography use="headline6" tag='h1'>ID: {contributionDetailsUI.id}</Typography>
+                <Typography use="headline6">{contributionDetailsUI.content}</Typography>
+                {[...contributionDetailsUI.comments].map((item) =>
+                    <Typography use="body2" tag='h6'>{item.content}</Typography>
+                )}
+            </div>
+            }
         </>
     )
 }
