@@ -15,9 +15,7 @@ function* handleUserProfile({id}) {
   yield put(apiCall(USER_PROFILE, `/user/${id}`).fetch())
 }
 
-function* handleUpdateProfile({payload, id}) {
-  console.log(payload)
-  console.log(id)
+function* handleUpdateProfile({payload}) {
   yield put(apiCall(USER_PROFILE, `/user`).update(payload))
 }
 
