@@ -33,32 +33,31 @@ export const CreateForm = () => {
     return (
         <>
             <Toolbar></Toolbar>
-            <Container>
+            <CenteredContainer>
                 <FormCard>
-                    <Container>
-                        <Typography use="subtitle2" tag="h3">Title</Typography>
-                        <TextField outlined label="Title" onChange={({target: {name, value}}) => {
+                    <CenteredContainer>
+                        <StyledTextField outlined label="Title" onChange={({target: {name, value}}) => {
                             setTitleInput(value)
-                        }}/>
-                    </Container>
-                    <Container>
-                        <Typography use="subtitle2" tag="h3">URL</Typography>
-                        <TextField outlined label="URL" onChange={({target: {name, value}}) => {
+                        }}>
+                        </StyledTextField>
+                    </CenteredContainer>
+                    <CenteredContainer>
+                        <StyledTextField outlined label="URL" onChange={({target: {name, value}}) => {
                             setURLInput(value)
-                        }}></TextField>
-                    </Container>
+                        }}>
+                        </StyledTextField>
+                    </CenteredContainer>
 
-                    <Container>
+                    <CenteredContainer>
                         <Typography use="subtitle2" tag="h3">OR</Typography>
-                    </Container>
+                    </CenteredContainer>
 
-                    <Container>
-                        <Typography use="subtitle2" tag="h3">Text</Typography>
+                    <CenteredContainer>
                         <TextField label="Your text"
                                    textarea
                                    outlined
                                    rows={4}
-                                   cols={50}
+                                   cols={80}
                                    helpText={{
                                        persistent: true,
                                        validationMsg: true,
@@ -67,13 +66,13 @@ export const CreateForm = () => {
                                        setTextInput(value)
                                    }}
                         />
-                    </Container>
-                    <Button label='Submit' raised
+                    </CenteredContainer>
+                    <StyledButton label='Submit' raised
                             theme={['secondaryBg', 'primary']}
                             onClick={() => onClickButton()}
                     />
                 </FormCard>
-            </Container>
+            </CenteredContainer>
         </>
     )
 }
@@ -83,11 +82,21 @@ const FormCard = styled(Card)`
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom:20px;
-    max-width: 1280px;
+    max-width: 1000px;
     float: none;
     margin: 0 auto;
 `
 
-const Container = styled.div`
+const CenteredContainer = styled.div`
     padding: 1rem;
+    margin: auto;
+`
+
+const StyledTextField = styled(TextField)`
+    width: 42vw;
+    margin: auto;
+`
+const StyledButton = styled(Button)`
+    width: 70%;
+    margin: auto;
 `
