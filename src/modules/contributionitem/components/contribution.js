@@ -170,8 +170,7 @@ const ContributionDiv = styled(Card)`
 `
 
 const MainContributionDiv = styled.div`
-    border-bottom: 6px inset rgba(255,145,38,0.4);
-    border-radius: 27px;
+
     padding: 10px;
 `
 
