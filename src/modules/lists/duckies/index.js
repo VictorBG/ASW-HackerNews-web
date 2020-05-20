@@ -33,7 +33,7 @@ export const UPVOTE_CONTRIBUTION = 'UPVOTE_CONTRIBUTION'
 export const UNVOTE_CONTRIBUTION = 'UNVOTE_CONTRIBUTION'
 
 export function * upVotePostIfPossible ({ item }) {
-    yield put(apiCall(UPVOTE_CONTRIBUTION, "/likes"), item.id)
+    yield put(apiCall(UPVOTE_CONTRIBUTION, "/likes"), item.id, item.user.username)
     // Para determinar si ha habido exito o no al lanzar la petición.
     const {createSuccess, createError} = typesFor(UPVOTE_CONTRIBUTION)
     const [success] = yield race([take(createSuccess), take(createError)])
@@ -43,7 +43,7 @@ export function * upVotePostIfPossible ({ item }) {
 }
 
 export function * unVotePostIfPossible ({ item }) {
-    yield put(apiCall(UNVOTE_CONTRIBUTION, "/likes"), item.id)
+    yield put(apiCall(UNVOTE_CONTRIBUTION, "/likes"), item.id, item.user.username)
     // Para determinar si ha habido exito o no al lanzar la petición.
     const {createSuccess, createError} = typesFor(UNVOTE_CONTRIBUTION)
     const [success] = yield race([take(createSuccess), take(createError)])

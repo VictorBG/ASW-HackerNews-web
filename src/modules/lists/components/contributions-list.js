@@ -9,16 +9,9 @@ import { LinkBadge } from './link-badge'
 import { isLink } from '../../../common/utils/format/text'
 import { IconButton } from '@rmwc/icon-button'
 import { Tooltip } from '@rmwc/tooltip'
- import {upVotePostIfPossible} from '../duckies/index'
- import {unVotePostIfPossible} from '../duckies/index'
- import {useDispatch} from "react-redux";
-import {Button} from '@rmwc/button'
-import {formatTimeAgo} from '../../../common/utils/format/time'
-import {AskBadge} from './ask-badge'
-import {LinkBadge} from './link-badge'
-import {isLink} from '../../../common/utils/format/text'
-import {IconButton} from '@rmwc/icon-button'
-import {Tooltip} from '@rmwc/tooltip'
+import {upVotePostIfPossible} from '../duckies/index'
+import {unVotePostIfPossible} from '../duckies/index'
+import {useDispatch} from "react-redux";
 import { useHistory } from 'react-router-dom'
 
 export const ContributionsList = ({list}) => {
@@ -28,9 +21,6 @@ export const ContributionsList = ({list}) => {
     const goToProfile = (id) => {
         history.push(`/user/${id}`)
     }
-
-
-export const ContributionsList = ({ list }) => {
     const onClickButton = (item) => {
         if (item.liked) upVote(item)
         else unVote(item)
