@@ -32,7 +32,7 @@ export function * listsSaga () {
 export const UPVOTE_CONTRIBUTION = 'UPVOTE_CONTRIBUTION'
 export const UNVOTE_CONTRIBUTION = 'UNVOTE_CONTRIBUTION'
 
-export function * upVotePostIfPossible ({ item }) {
+export function * handleUpVote ({ item }) {
     yield put(apiCall(UPVOTE_CONTRIBUTION, "/likes"), item.id, item.user.username)
     // Para determinar si ha habido exito o no al lanzar la petición.
     const {createSuccess, createError} = typesFor(UPVOTE_CONTRIBUTION)
@@ -42,7 +42,7 @@ export function * upVotePostIfPossible ({ item }) {
     }
 }
 
-export function * unVotePostIfPossible ({ item }) {
+export function * handleUnVote ({ item }) {
     yield put(apiCall(UNVOTE_CONTRIBUTION, "/likes"), item.id, item.user.username)
     // Para determinar si ha habido exito o no al lanzar la petición.
     const {createSuccess, createError} = typesFor(UNVOTE_CONTRIBUTION)

@@ -9,8 +9,8 @@ import { LinkBadge } from './link-badge'
 import { isLink } from '../../../common/utils/format/text'
 import { IconButton } from '@rmwc/icon-button'
 import { Tooltip } from '@rmwc/tooltip'
-import {upVotePostIfPossible} from '../duckies/index'
-import {unVotePostIfPossible} from '../duckies/index'
+import {handleUpVote} from '../duckies/index'
+import {handleUnVote} from '../duckies/index'
 import {useDispatch} from "react-redux";
 import { useHistory } from 'react-router-dom'
 
@@ -26,8 +26,8 @@ export const ContributionsList = ({list}) => {
         else unVote(item)
     }
     const dispatch = useDispatch()
-    const upVote = () => dispatch(upVotePostIfPossible())
-    const unVote = () => dispatch(unVotePostIfPossible())
+    const upVote = (item) => dispatch(handleUpVote(item))
+    const unVote = (item) => dispatch(handleUnVote(item))
     return (
         <>
             {list.map(item =>
