@@ -9,67 +9,70 @@ import { LinkBadge } from './link-badge'
 import { isLink } from '../../../common/utils/format/text'
 import { IconButton } from '@rmwc/icon-button'
 import { Tooltip } from '@rmwc/tooltip'
- import {upVotePostIfPossible} from '../duckies'
- import {unVotePostIfPossible} from '../duckies'
- import {postNewContribution} from "../../create/duckies";
+ import {upVotePostIfPossible} from '../duckies/index'
+ import {unVotePostIfPossible} from '../duckies/index'
+ import {useDispatch} from "react-redux";
 
-export const ContributionsList = ({ list }) => (
-    <>
-        {list.map(item =>
-            <ContributionCard>
-                <LikeContainer>
-                    <Tooltip content={item.liked ? 'Remove vote' : 'Upvote'}>
-                        <IconButton
-                            checked={item.liked}
-                            onIcon="arrow_drop_down"
-                            icon="arrow_drop_up"
-                            onClick={() => onClickButton(checked, item)}
-                        />
-                    </Tooltip>
-                    <Typography use='headline5' tag='div'>{item.points}</Typography>
-                </LikeContainer>
-                <CardContainer>
-                    <AskBadge content={item.content}/>
-                    {isLink(item.content) &&
-                    <StyledTitle use="headline6" tag="a" href={item.content}>
-                        {item.title}
-                    </StyledTitle>}
-                    {!isLink(item.content) &&
-                    <StyledTitle use="headline6" tag="h2">
-                        {item.title}
-                    </StyledTitle>}
 
-                    <LinkBadge content={item.content}/>
-                    <CardContent>
-                        <StyledUsernameButton
-                            label={item.user.username}
-                            icon="person_outline"
-                            theme={['onSecondary']}/>
-                        <StyledTimeButton
-                            label={formatTimeAgo(item.createdAt)}
-                            icon="schedule"
-                            theme={['onSecondary']}
-                            disabled/>
-                        <StyledCommentsButton
-                            label={item.commentsLength === 0
-                                ? 'discuss'
-                                : item.commentsLength + ' comment' + (item.commentsLength !== 1 ? 's' : '')}
-                            icon="bubble_chart"
-                            theme={['onSecondary']}/>
-                    </CardContent>
-                </CardContainer>
-            </ContributionCard>
-        )}
-    </>
-)
+export const ContributionsList = ({ list }) => {
+    const onClickButton = (item) => {
+        if (item.liked) upVote(item)
+        else unVote(item)
+    }
+    const dispatch = useDispatch()
+    const upVote = () => dispatch(upVotePostIfPossible())
+    const unVote = () => dispatch(unVotePostIfPossible())
+    return (
+        <>
+            {list.map(item =>
+                <ContributionCard>
+                    <LikeContainer>
+                        <Tooltip content={item.liked ? 'Remove vote' : 'Upvote'}>
+                            <IconButton
+                                checked={item.liked}
+                                onIcon="arrow_drop_down"
+                                icon="arrow_drop_up"
+                                onClick={() => onClickButton(item)}
+                            />
+                        </Tooltip>
+                        <Typography use='headline5' tag='div'>{item.points}</Typography>
+                    </LikeContainer>
+                    <CardContainer>
+                        <AskBadge content={item.content}/>
+                        {isLink(item.content) &&
+                        <StyledTitle use="headline6" tag="a" href={item.content}>
+                            {item.title}
+                        </StyledTitle>}
+                        {!isLink(item.content) &&
+                        <StyledTitle use="headline6" tag="h2">
+                            {item.title}
+                        </StyledTitle>}
 
- const onClickButton = (checked, item) => {
-     if(checked) upVote(item)
-     else unVote(item)
- }
+                        <LinkBadge content={item.content}/>
+                        <CardContent>
+                            <StyledUsernameButton
+                                label={item.user.username}
+                                icon="person_outline"
+                                theme={['onSecondary']}/>
+                            <StyledTimeButton
+                                label={formatTimeAgo(item.createdAt)}
+                                icon="schedule"
+                                theme={['onSecondary']}
+                                disabled/>
+                            <StyledCommentsButton
+                                label={item.commentsLength === 0
+                                    ? 'discuss'
+                                    : item.commentsLength + ' comment' + (item.commentsLength !== 1 ? 's' : '')}
+                                icon="bubble_chart"
+                                theme={['onSecondary']}/>
+                        </CardContent>
+                    </CardContainer>
+                </ContributionCard>
+            )}
+        </>
+    )
+}
 
- const upVote = () => dispatch(upVotePostIfPossible())
- const unVote = () => dispatch(unVotePostIfPossible())
 
 const ContributionCard = styled(Card)`
     margin-bottom: 20px;
