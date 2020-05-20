@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { TopAppBarFixedAdjust } from '@rmwc/top-app-bar'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FETCH_LIST, fetchList } from '../duckies/index'
 import { ContributionsList } from './contributions-list'
@@ -11,15 +10,11 @@ export const ListScreen = () => {
     const dispatch = useDispatch()
     const list = useSelector(state => state.list || [])
 
-    useEffect(() => {
-        fetch(0)
-    }, [])
-
     const fetch = index => dispatch(fetchList(index))
 
     return (
         <>
-            <ListToolbar onClick={(pos) => (dispatch(fetch(pos)))}/>
+            <ListToolbar onClick={(pos) => (fetch(pos))}/>
             <Loader resourceName={FETCH_LIST}/>
 
             <ContributionsContainer>

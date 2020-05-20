@@ -1,6 +1,6 @@
- import React from 'react'
-import { Card } from '@rmwc/card'
-import { Typography } from '@rmwc/typography'
+import React, {useCallback} from 'react'
+import {Card} from '@rmwc/card'
+import {Typography} from '@rmwc/typography'
 import styled from 'styled-components'
 import { Button } from '@rmwc/button'
 import { formatTimeAgo } from '../../../common/utils/format/time'
@@ -12,6 +12,22 @@ import { Tooltip } from '@rmwc/tooltip'
  import {upVotePostIfPossible} from '../duckies/index'
  import {unVotePostIfPossible} from '../duckies/index'
  import {useDispatch} from "react-redux";
+import {Button} from '@rmwc/button'
+import {formatTimeAgo} from '../../../common/utils/format/time'
+import {AskBadge} from './ask-badge'
+import {LinkBadge} from './link-badge'
+import {isLink} from '../../../common/utils/format/text'
+import {IconButton} from '@rmwc/icon-button'
+import {Tooltip} from '@rmwc/tooltip'
+import { useHistory } from 'react-router-dom'
+
+export const ContributionsList = ({list}) => {
+
+    const history = useHistory()
+
+    const goToProfile = (id) => {
+        history.push(`/user/${id}`)
+    }
 
 
 export const ContributionsList = ({ list }) => {

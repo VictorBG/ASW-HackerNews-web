@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { call, fork, put, takeEvery } from 'redux-saga/effects'
+import { call, fork, put, select, takeEvery } from 'redux-saga/effects'
 import { CRUD_ERROR } from '../../components/snackbar-error'
 import { CREATE, DELETE, FETCH, START, typesFor, UPDATE } from './types-for'
 import { LOADING_CHANGE } from '../../components/loader'
@@ -17,6 +17,20 @@ import { LOADING_CHANGE } from '../../components/loader'
  */
 function * doRequest (resource, request, success, fail, transform = (transform) => transform, silent = false) {
     yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: true })
+
+    if (!axios.defaults.headers.common.Authorization) {
+        const user = yield select((state) => state.user)
+        if (!!user) {
+            setRequestDefaults({
+                headers: {
+                    common: {
+                        'Authorization': user.token
+                    }
+                }
+            })
+        }
+    }
+
     try {
         const response = yield request
         yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: false })
@@ -25,9 +39,10 @@ function * doRequest (resource, request, success, fail, transform = (transform) 
         // dispatches a CRUD_ERROR so the error snackbar can be shown
         // it first dispatches a null CRUD_ERROR to remove any previous error
         yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: false })
+        const message = !!error.response.data.message? error.response.data.message : 'Could not connect to the server'
         if (!silent) {
             yield put({ type: CRUD_ERROR, message: null })
-            yield put({ type: CRUD_ERROR, message: error.response.data.message })
+            yield put({ type: CRUD_ERROR, message })
         }
         yield put({ type: fail, error })
     }

@@ -3,18 +3,24 @@ import ReactDOM from 'react-dom'
 import 'rmwc/dist/styles'
 import './index.css'
 import App from './app'
-import store from './app/store'
+import store, { persistor } from './app/store'
 import { Provider } from 'react-redux'
 import * as serviceWorker from './serviceWorker'
+import { PersistGate } from 'redux-persist/integration/react'
+import { useLocation } from 'react-router-dom'
+
+export function useQuery () {
+    return new URLSearchParams(useLocation().search)
+}
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
+    <Provider store={store}>
+        <PersistGate store={store} persistor={persistor}>
             <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"/>
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
             <App/>
-        </Provider>
-    </React.StrictMode>,
+        </PersistGate>
+    </Provider>,
     document.getElementById('root')
 )
 

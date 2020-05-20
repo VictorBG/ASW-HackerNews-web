@@ -2,7 +2,6 @@ import { getDomain, isLink } from '../../../common/utils/format/text'
 import { Typography } from '@rmwc/typography'
 import styled from 'styled-components'
 import React from 'react'
-import { Icon } from '@rmwc/icon'
 
 export const LinkBadge = ({ content }) => (
     <>
@@ -20,11 +19,6 @@ export const LinkBadge = ({ content }) => (
     </>
 )
 
-const BadgeContainer = styled.a`
+const BadgeContainer = styled.span`
     padding: 5px;
-`
-
-const IconLink = styled(Icon)`
-    height: 18px;
-    width: 18px;
 `
