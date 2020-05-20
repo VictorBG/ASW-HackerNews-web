@@ -11,7 +11,7 @@ import {TextField} from "@rmwc/textfield";
 import {Button} from "@rmwc/button";
 import {Card} from "@rmwc/card";
 import {AskBadge} from "../../lists/components/ask-badge";
-import {isLink} from "../../../common/utils/format/text";
+import {isEmpty, isLink, isNotEmpty} from "../../../common/utils/format/text";
 import {ListToolbar} from "../../lists/components/list-toolbar";
 
 
@@ -52,6 +52,16 @@ export const ContributionForm = () => {
             <ContributionDiv>
                 <MainContributionDiv>
                     <TitleDiv>
+                        {isLink(contributionDetailsUI.content) &&
+                        <StyledTitle use="headline6" tag="a" href={contributionDetailsUI.content}>
+                            {contributionDetailsUI.title} ({contributionDetailsUI.content})
+                        </StyledTitle>}
+                        {!isLink(contributionDetailsUI.content) && isNotEmpty(contributionDetailsUI.title) &&
+                        <StyledTitle use="headline6" tag="h2">
+                            ASK HN: {contributionDetailsUI.title}
+                        </StyledTitle>}
+                    </TitleDiv>
+                    <SubtitleDiv>
                         <Tooltip content={contributionDetailsUI.liked ? 'Remove vote' : 'Upvote'}>
                             <IconButton
                                 checked={contributionDetailsUI.liked}
@@ -59,30 +69,29 @@ export const ContributionForm = () => {
                                 icon="arrow_drop_up"
                             />
                         </Tooltip>
-                        {isLink(contributionDetailsUI.content) &&
-                        <StyledTitle use="headline6" tag="a" href={contributionDetailsUI.content}>
-                            {contributionDetailsUI.title}
-                        </StyledTitle>}
-                        {!isLink(contributionDetailsUI.content) &&
-                        <StyledTitle use="headline6" tag="h2">
-                            {contributionDetailsUI.title}
-                        </StyledTitle>}
-
-
-                    </TitleDiv>
-                    <SubtitleDiv>
-                        <StyledTitle use="caption" tag="c">
+                        <StyledSubTitle use="caption" tag="c">
                             {contributionDetailsUI.points} points
-                        </StyledTitle>
-                        <StyledTitle use="caption" tag="c">
+                        </StyledSubTitle>
+                        <StyledSubTitle use="caption" tag="a" href={'/user/' + contributionDetailsUI.user.id}>
                             by {contributionDetailsUI.user.username}
-                        </StyledTitle>
-                        <StyledTitle use="caption" tag="c">
+                        </StyledSubTitle>
+                        <StyledSubTitle use="caption" tag="a" href={'/item/' + contributionDetailsUI.contributionTopParentId}>
                             {formatTimeAgo(contributionDetailsUI.createdAt)} ago
-                        </StyledTitle>
-                        <StyledTitle use="caption" tag="c">
+                        </StyledSubTitle>
+                        <StyledSubTitle use="caption" tag="c">
                             {contributionDetailsUI.comments.length} comments
-                        </StyledTitle>
+                        </StyledSubTitle>
+
+                        {!isNotEmpty(contributionDetailsUI.title) &&
+                        <StyledSubTitle use="caption" tag="a" href={'/item/' + contributionDetailsUI.contributionParentId}>
+                            parent
+                        </StyledSubTitle>}
+
+                        {!isNotEmpty(contributionDetailsUI.title) &&
+                        <StyledSubTitle use="caption" tag="a" href={'/item/' + contributionDetailsUI.contributionTopParentId}>
+                            on: top parent
+                        </StyledSubTitle>}
+
                     </SubtitleDiv>
                     <ContentDiv>
                         {!isLink(contributionDetailsUI.content) &&
@@ -114,7 +123,8 @@ export const ContributionForm = () => {
                 </MainContributionDiv>
 
                 {[...contributionDetailsUI.comments].map((comment) =>
-                    <CommentContainer>
+
+                    <CommentContainer style={{paddingLeft: comment.treeLength*2}}>
                         <SubtitleDiv>
                             <Tooltip content={contributionDetailsUI.liked ? 'Remove vote' : 'Upvote'}>
                                 <IconButton
@@ -123,15 +133,15 @@ export const ContributionForm = () => {
                                     icon="arrow_drop_up"
                                 />
                             </Tooltip>
-                            <StyledTitle use="caption" tag="c">
+                            <StyledSubTitle use="caption" tag="c">
                                 {comment.points} points
-                            </StyledTitle>
-                            <StyledTitle use="caption" tag="c">
+                            </StyledSubTitle>
+                            <StyledSubTitle use="caption" tag="a" href={'/user/' + contributionDetailsUI.user.id}>
                                 {comment.user.username}
-                            </StyledTitle>
-                            <StyledTitle use="caption" tag="c">
+                            </StyledSubTitle>
+                            <StyledSubTitle use="caption" tag="a" href={'/item/' + comment.id}>
                                 {formatTimeAgo(comment.createdAt)} ago
-                            </StyledTitle>
+                            </StyledSubTitle>
                         </SubtitleDiv>
                         <ContentDiv>
                             <StyledTitle use="subtitle2" tag="s2">
@@ -139,9 +149,9 @@ export const ContributionForm = () => {
                             </StyledTitle>
                         </ContentDiv>
                         <ReplyDiv>
-                            <StyledTitle use="caption" tag="a" href={'/item/' + comment.id}>
-                                reply
-                            </StyledTitle>
+                            <StyledButton icon="bubble_chart" use="caption" tag="a" href={'/item/' + comment.id} theme={['onSecondary']}>
+                                Reply
+                            </StyledButton>
                         </ReplyDiv>
                     </CommentContainer>
                 )}
@@ -156,6 +166,7 @@ const ContributionDiv = styled(Card)`
     max-width: 1400px;
     float: none;
     margin: 0 auto; 
+    border-radius: 27px;
 `
 
 const MainContributionDiv = styled.div`
@@ -173,12 +184,11 @@ const TitleDiv = styled.div`
 `
 
 const SubtitleDiv = styled.div`
-    padding-top: 2px;
     display: flex;
 `
 
 const ContentDiv = styled.div`
-    padding: 10px;
+
 `
 
 const ReplyDiv = styled.div`
@@ -194,8 +204,14 @@ const AddCommentButtonDiv = styled.div`
 `
 
 const StyledButton = styled(Button)`
+--mdc-typography-button-text-transform: none; 
 `
 
 const StyledTitle = styled(Typography)`
     margin-left: 10px;
+`
+
+const StyledSubTitle = styled(Typography)`
+    margin-left: 10px;
+    margin-top:15px;
 `
