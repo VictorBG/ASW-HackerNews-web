@@ -15,7 +15,7 @@ export const AskBadge = ({ content }) => (
     </>
 )
 
-const BadgeContainer = styled.a`
+const BadgeContainer = styled.span`
     background: var(--mdc-theme-secondary);
     border-radius: 4px;
     padding: 5px;

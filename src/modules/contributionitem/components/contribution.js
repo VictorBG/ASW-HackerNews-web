@@ -75,7 +75,7 @@ export const ContributionForm = () => {
                         <StyledSubTitle use="caption" tag="a" href={'/user/' + contributionDetailsUI.user.id}>
                             by {contributionDetailsUI.user.username}
                         </StyledSubTitle>
-                        <StyledSubTitle use="caption" tag="a" href={'/item/' + contributionDetailsUI.contributionTopParentId}>
+                        <StyledSubTitle use="caption" tag="a">
                             {formatTimeAgo(contributionDetailsUI.createdAt)} ago
                         </StyledSubTitle>
                         <StyledSubTitle use="caption" tag="c">

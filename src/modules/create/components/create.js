@@ -4,7 +4,7 @@ import {Typography} from '@rmwc/typography'
 import styled from 'styled-components'
 import {Button} from '@rmwc/button'
 import {TextField} from '@rmwc/textfield'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {postNewContribution} from "../duckies";
 import {Toolbar} from "../../../common/components/toolbar";
 import {useHistory} from "react-router-dom";
