@@ -43,17 +43,11 @@ export function * listsSaga () {
 
 
 export function * handleUpVote ({ item }) {
-    yield put(apiCall(UPVOTE_CONTRIBUTION, "/likes"), item.id, item.user.username).create()
-    // Para determinar si ha habido exito o no al lanzar la petición.
-    const {createSuccess, createError} = typesFor(UPVOTE_CONTRIBUTION)
-    const [success] = yield race([take(createSuccess), take(createError)])
-    if (success) {
-        // Redirect
-    }
+    yield put(apiCall(UPVOTE_CONTRIBUTION, '/likes'), item.id, item.user.username).create()
 }
 
 export function * handleUnVote ({ item }) {
-    yield put(apiCall(UNVOTE_CONTRIBUTION, "/likes"), item.id, item.user.username).delete()
+    yield put(apiCall(UNVOTE_CONTRIBUTION, '/unlikes'), item.id, item.user.username).delete()
     // Para determinar si ha habido exito o no al lanzar la petición.
     const {createSuccess, createError} = typesFor(UNVOTE_CONTRIBUTION)
     const [success] = yield race([take(createSuccess), take(createError)])
