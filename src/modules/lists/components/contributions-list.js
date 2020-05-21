@@ -13,6 +13,7 @@ import {handleUpVote} from '../duckies/index'
 import {handleUnVote} from '../duckies/index'
 import {useDispatch} from "react-redux";
 import { useHistory } from 'react-router-dom'
+import {unVotePost, upVotePost} from "../duckies";
 
 export const ContributionsList = ({list}) => {
 
@@ -22,12 +23,12 @@ export const ContributionsList = ({list}) => {
         history.push(`/user/${id}`)
     }
     const onClickButton = (item) => {
-        if (item.liked) upVote(item)
+        if (!item.liked) upVote(item)
         else unVote(item)
     }
     const dispatch = useDispatch()
-    const upVote = (item) => dispatch(handleUpVote(item))
-    const unVote = (item) => dispatch(handleUnVote(item))
+    const upVote = (item) => dispatch(upVotePost(item))
+    const unVote = (item) => dispatch(unVotePost(item))
     return (
         <>
             {list.map(item =>

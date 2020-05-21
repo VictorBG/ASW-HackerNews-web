@@ -10,6 +10,8 @@ export const UPVOTE_CONTRIBUTION = 'UPVOTE_CONTRIBUTION'
 export const UNVOTE_CONTRIBUTION = 'UNVOTE_CONTRIBUTION'
 
 export const fetchList = index => ({ type: FETCH_LIST, index })
+export const upVotePost = item => ({type: UPVOTE_CONTRIBUTION, item })
+export const unVotePost = item => ({type: UNVOTE_CONTRIBUTION, item})
 
 export const listsReducer = reducerFor(FETCH_LIST, [])
 
@@ -23,6 +25,26 @@ const ENDPOINTS = [
     '/urls',
     '/ask'
 ]
+
+export function * handleUpVote ({ item }) {
+    yield put(apiCall(UPVOTE_CONTRIBUTION, `/item/${item.id}/like`)).create()
+    // Para determinar si ha habido exito o no al lanzar la petición.
+    const {createSuccess, createError} = typesFor(UNVOTE_CONTRIBUTION)
+    const [success] = yield race([take(createSuccess), take(createError)])
+    if (success) {
+        // Redirect
+    }
+}
+
+export function * handleUnVote ({ item }) {
+    yield put(apiCall(UNVOTE_CONTRIBUTION, `/item/${item.id}/like`)).delete()
+    // Para determinar si ha habido exito o no al lanzar la petición.
+    const {createSuccess, createError} = typesFor(UNVOTE_CONTRIBUTION)
+    const [success] = yield race([take(createSuccess), take(createError)])
+    if (success) {
+        // Redirect
+    }
+}
 
 export function * listsSaga () {
     function * watchFetchList () {
@@ -38,22 +60,6 @@ export function * listsSaga () {
     yield fork(watchFetchList)
     yield fork(watchUpVote)
     yield fork (watchUnVote)
-}
-
-
-
-export function * handleUpVote ({ item }) {
-    yield put(apiCall(UPVOTE_CONTRIBUTION, '/likes'), item.id, item.user.username).create()
-}
-
-export function * handleUnVote ({ item }) {
-    yield put(apiCall(UNVOTE_CONTRIBUTION, '/unlikes'), item.id, item.user.username).delete()
-    // Para determinar si ha habido exito o no al lanzar la petición.
-    const {createSuccess, createError} = typesFor(UNVOTE_CONTRIBUTION)
-    const [success] = yield race([take(createSuccess), take(createError)])
-    if (success) {
-        // Redirect
-    }
 }
 
 
