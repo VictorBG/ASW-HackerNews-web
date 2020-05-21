@@ -24,10 +24,10 @@ const ENDPOINTS = [
     '/ask'
 ]
 
-export function * handleVote ({ item }) {
+export function * handleVote ({ item, refetch }) {
     const apiCallForVotingStuff = apiCall(CHANGE_VOTE, `/item/${item.id}/like`)
 
-    const actions = actionFor(CHANGE_VOTE)
+    const actions = typesFor(CHANGE_VOTE)
     yield put(item.liked ? apiCallForVotingStuff.deleteSilent() : apiCallForVotingStuff.updateSilent())
 
     const successAction = item.liked ? actions.deleteSuccess : actions.updateSuccess

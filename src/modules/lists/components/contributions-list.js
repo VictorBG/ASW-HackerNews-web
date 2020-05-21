@@ -9,12 +9,10 @@ import { LinkBadge } from './link-badge'
 import { isLink } from '../../../common/utils/format/text'
 import { IconButton } from '@rmwc/icon-button'
 import { Tooltip } from '@rmwc/tooltip'
-import {handleVote} from '../duckies/index'
-import {handleUnVote} from '../duckies/index'
 import {useDispatch} from "react-redux";
 import { useHistory } from 'react-router-dom'
-import {unVotePost, checkVote} from "../duckies";
-import {POST_CONTRIBUTION} from "../../create/duckies";
+import {checkVote} from "../duckies";
+import {GET_CONTRIBUTION} from "../../contributionitem/duckies";
 
 export const ContributionsList = ({list}) => {
 
@@ -27,7 +25,7 @@ export const ContributionsList = ({list}) => {
         changeVote(item)
     }
     const dispatch = useDispatch()
-    const changeVote = (item) => {dispatch(checkVote(item, POST_CONTRIBUTION))}
+    const changeVote = (item) => {dispatch(checkVote(item, GET_CONTRIBUTION))}
 
     return (
         <>
