@@ -6,6 +6,7 @@ import { errorReducer } from '../common/components/snackbar-error'
 import { BASE_URL_DEV } from '../common/constants/index'
 import { linearLoadingReducer } from '../common/components/loader'
 import { contributionSaga } from '../modules/create/duckies'
+import {contributionDetailsReducer, contributionDetailsSaga} from "../modules/contributionitem/duckies";
 import { loginReducer, loginSaga } from '../common/auth'
 import { profileSaga, userReducer } from '../modules/user/patitos'
 import { persistReducer, persistStore } from 'redux-persist'
@@ -15,6 +16,7 @@ const appReducer = combineReducers({
     list: listsReducer,
     error: errorReducer,
     loading: linearLoadingReducer,
+    contributionDetails: contributionDetailsReducer(),
     user: loginReducer,
     profile: userReducer
 })
@@ -40,6 +42,7 @@ export const persistor = persistStore(store)
 sagaMiddleware.run(crudSaga)
 sagaMiddleware.run(listsSaga)
 sagaMiddleware.run(contributionSaga)
+sagaMiddleware.run(contributionDetailsSaga)
 sagaMiddleware.run(loginSaga)
 sagaMiddleware.run(profileSaga)
 

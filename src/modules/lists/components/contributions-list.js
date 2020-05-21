@@ -66,10 +66,14 @@ export const ContributionsList = ({list}) => {
                                 theme={['onSecondary']}
                                 disabled/>
                             <StyledCommentsButton
+                                tag="a"
                                 label={item.commentsLength === 0
                                     ? 'discuss'
                                     : item.commentsLength + ' comment' + (item.commentsLength !== 1 ? 's' : '')}
                                 icon="bubble_chart"
+                                onClick={() => {
+                                    history.push(`/item/${item.id}`)
+                                }}
                                 theme={['onSecondary']}/>
                         </CardContent>
                     </CardContainer>
