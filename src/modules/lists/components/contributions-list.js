@@ -9,11 +9,12 @@ import { LinkBadge } from './link-badge'
 import { isLink } from '../../../common/utils/format/text'
 import { IconButton } from '@rmwc/icon-button'
 import { Tooltip } from '@rmwc/tooltip'
-import {handleUpVote} from '../duckies/index'
+import {handleVote} from '../duckies/index'
 import {handleUnVote} from '../duckies/index'
 import {useDispatch} from "react-redux";
 import { useHistory } from 'react-router-dom'
-import {unVotePost, upVotePost} from "../duckies";
+import {unVotePost, checkVote} from "../duckies";
+import {POST_CONTRIBUTION} from "../../create/duckies";
 
 export const ContributionsList = ({list}) => {
 
@@ -23,12 +24,11 @@ export const ContributionsList = ({list}) => {
         history.push(`/user/${id}`)
     }
     const onClickButton = (item) => {
-        if (!item.liked) upVote(item)
-        else unVote(item)
+        changeVote(item)
     }
     const dispatch = useDispatch()
-    const upVote = (item) => dispatch(upVotePost(item))
-    const unVote = (item) => dispatch(unVotePost(item))
+    const changeVote = (item) => {dispatch(checkVote(item, POST_CONTRIBUTION))}
+
     return (
         <>
             {list.map(item =>
