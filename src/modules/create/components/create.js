@@ -7,6 +7,7 @@ import {TextField} from '@rmwc/textfield'
 import {useDispatch} from 'react-redux'
 import {postNewContribution} from "../duckies";
 import {Toolbar} from "../../../common/components/toolbar";
+import {useHistory} from "react-router-dom";
 
 export const CreateForm = () => {
 
@@ -16,6 +17,7 @@ export const CreateForm = () => {
     const [textInput, setTextInput] = useState('')
 
     const dispatch = useDispatch()
+    const history = useHistory()
 
     const onClickButton = () => {
         addNewContribution()
@@ -23,10 +25,11 @@ export const CreateForm = () => {
 
     // Payload es el "json" que se enviara en el POST
     const addNewContribution = () => dispatch(postNewContribution({
-        payload: {
+        data: {
             title: titleInput,
             url: urlInput,
-            text: textInput
+            text: textInput,
+            h: history
         }
     }))
 

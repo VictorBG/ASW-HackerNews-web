@@ -5,6 +5,7 @@ import { ListScreen } from './modules/lists/components/list-base-screen'
 import { SnackbarError } from './common/components/snackbar-error'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { CreateForm } from './modules/create/components/create'
+import {ContributionForm} from "./modules/contributionitem/components/contribution";
 import { useDispatch, useSelector } from 'react-redux'
 import FacebookLogin from 'react-facebook-login'
 import { login } from './common/auth'
@@ -39,6 +40,9 @@ function App () {
                 <Switch>
                     <Route path='/create'>
                         <CreateForm/>
+                    </Route>
+                    <Route path='/item/:id'>
+                        <ContributionForm/>
                     </Route>
                     <Route path='/user/:id'>
                         <UserProfileForm/>
