@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { Typography } from '@rmwc/typography'
-import { useDispatch, useSelector } from 'react-redux'
-import { contributionDetails, postComment } from '../duckies'
-import { useParams, useHistory } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import {Typography} from '@rmwc/typography'
+import {useDispatch, useSelector} from 'react-redux'
+import {contributionDetails, postComment} from '../duckies'
+import {useHistory, useParams} from 'react-router-dom'
 import {formatTimeAgo} from "../../../common/utils/format/time";
 import styled from "styled-components";
 import {IconButton} from "@rmwc/icon-button";
@@ -10,13 +10,12 @@ import {Tooltip} from "@rmwc/tooltip";
 import {TextField} from "@rmwc/textfield";
 import {Button} from "@rmwc/button";
 import {Card} from "@rmwc/card";
-import {AskBadge} from "../../lists/components/ask-badge";
-import {isEmpty, isLink, isNotEmpty} from "../../../common/utils/format/text";
+import {isLink, isNotEmpty} from "../../../common/utils/format/text";
 import {ListToolbar} from "../../lists/components/list-toolbar";
 
 
 export const ContributionForm = () => {
-    const { id } = useParams()
+    const {id} = useParams()
     const history = useHistory()
 
     const dispatch = useDispatch()
@@ -83,12 +82,14 @@ export const ContributionForm = () => {
                         </StyledSubTitle>
 
                         {!isNotEmpty(contributionDetailsUI.title) &&
-                        <StyledSubTitle use="caption" tag="a" href={'/item/' + contributionDetailsUI.contributionParentId}>
+                        <StyledSubTitle use="caption" tag="a"
+                                        href={'/item/' + contributionDetailsUI.contributionParentId}>
                             parent
                         </StyledSubTitle>}
 
                         {!isNotEmpty(contributionDetailsUI.title) &&
-                        <StyledSubTitle use="caption" tag="a" href={'/item/' + contributionDetailsUI.contributionTopParentId}>
+                        <StyledSubTitle use="caption" tag="a"
+                                        href={'/item/' + contributionDetailsUI.contributionTopParentId}>
                             on: top parent
                         </StyledSubTitle>}
 
@@ -124,7 +125,7 @@ export const ContributionForm = () => {
 
                 {[...contributionDetailsUI.comments].map((comment) =>
 
-                    <CommentContainer style={{paddingLeft: comment.treeLength*2}}>
+                    <CommentContainer style={{paddingLeft: comment.treeLength * 2}}>
                         <SubtitleDiv>
                             <Tooltip content={contributionDetailsUI.liked ? 'Remove vote' : 'Upvote'}>
                                 <IconButton
@@ -149,7 +150,8 @@ export const ContributionForm = () => {
                             </StyledTitle>
                         </ContentDiv>
                         <ReplyDiv>
-                            <StyledButton icon="bubble_chart" use="caption" tag="a" href={'/item/' + comment.id} theme={['onSecondary']}>
+                            <StyledButton icon="bubble_chart" use="caption" tag="a" href={'/item/' + comment.id}
+                                          theme={['onSecondary']}>
                                 Reply
                             </StyledButton>
                         </ReplyDiv>

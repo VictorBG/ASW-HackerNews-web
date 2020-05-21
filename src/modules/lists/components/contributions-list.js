@@ -1,36 +1,34 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {Card} from '@rmwc/card'
 import {Typography} from '@rmwc/typography'
 import styled from 'styled-components'
-import { Button } from '@rmwc/button'
-import { formatTimeAgo } from '../../../common/utils/format/time'
-import { AskBadge } from './ask-badge'
-import { LinkBadge } from './link-badge'
-import { isLink } from '../../../common/utils/format/text'
-import { IconButton } from '@rmwc/icon-button'
-import { Tooltip } from '@rmwc/tooltip'
+import {Button} from '@rmwc/button'
+import {formatTimeAgo} from '../../../common/utils/format/time'
+import {AskBadge} from './ask-badge'
+import {LinkBadge} from './link-badge'
+import {isLink} from '../../../common/utils/format/text'
+import {IconButton} from '@rmwc/icon-button'
+import {Tooltip} from '@rmwc/tooltip'
 import {useDispatch} from "react-redux";
-import { useHistory } from 'react-router-dom'
-import {checkVote} from "../duckies";
-import {GET_CONTRIBUTION} from "../../contributionitem/duckies";
+import {useHistory} from 'react-router-dom'
+import {checkVote, fetchList} from "../duckies";
 
-export const ContributionsList = ({list}) => {
+export const ContributionsList = ({list, indexList}) => {
 
     const history = useHistory()
+
+    const dispatch = useDispatch()
 
     const goToProfile = (id) => {
         history.push(`/user/${id}`)
     }
-    const onClickButton = (item) => {
-        changeVote(item)
-    }
-    const dispatch = useDispatch()
-    const changeVote = (item) => {dispatch(checkVote(item, GET_CONTRIBUTION))}
+
+    const onClickButton = (item) => (dispatch(checkVote(item, fetchList(indexList))))
 
     return (
         <>
             {list.map(item =>
-                <ContributionCard>
+                <ContributionCard key={item.id}>
                     <LikeContainer>
                         <Tooltip content={item.liked ? 'Remove vote' : 'Upvote'}>
                             <IconButton
@@ -58,6 +56,7 @@ export const ContributionsList = ({list}) => {
                             <StyledUsernameButton
                                 label={item.user.username}
                                 icon="person_outline"
+                                onClick={() => goToProfile(item.user.id)}
                                 theme={['onSecondary']}/>
                             <StyledTimeButton
                                 label={formatTimeAgo(item.createdAt)}
