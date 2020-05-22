@@ -10,9 +10,10 @@ import {Button} from '@rmwc/button'
 import '@rmwc/button/styles'
 import {profile} from '../patitos/index'
 import {useHistory, useParams} from 'react-router-dom'
-import {updateProfile} from "../patitos";
+import {getUpVotedComments, getUpVotedSubmissions, updateProfile} from "../patitos";
 import {Typography} from "@rmwc/typography";
 import {formatTimeAgo} from "../../../common/utils/format/time";
+
 
 export const UserProfileForm = () => {
     const dispatch = useDispatch()
@@ -65,6 +66,9 @@ export const UserProfileForm = () => {
     const onUpdateClick = () => {
         updateForm()
     }
+
+    const onUpVotedSubmissionsClick = () => (dispatch(getUpVotedSubmissions(userProfile.id)))
+    const onUpVotedCommentsClick = () => (dispatch(getUpVotedComments(userProfile.id)))
 
     // 5 is a random number to be out of range, so no tab is selected
     return (<>
@@ -160,6 +164,14 @@ export const UserProfileForm = () => {
                                          onChange={({target: {value}}) => {
                                              setDelayInput(value)
                                          }}/>
+                    </Divisor>
+                    <Divisor>
+                        <CustomButton label="See my upvoted submissions"
+                                      raised
+                                      onClick={() => onUpVotedSubmissionsClick()}/>
+                        <CustomButton label="See my upvoted comments"
+                                      raised
+                                      onClick={() => onUpVotedCommentsClick()}/>
                     </Divisor>
                     <Divisor>
                         <CustomButton label="Update Profile"
