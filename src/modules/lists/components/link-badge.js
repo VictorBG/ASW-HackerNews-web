@@ -1,4 +1,4 @@
-import { getDomain, isLink } from '../../../common/utils/format/text'
+import {getDomain, isLink, sanitizeUrl} from '../../../common/utils/format/text'
 import { Typography } from '@rmwc/typography'
 import styled from 'styled-components'
 import React from 'react'
@@ -10,7 +10,8 @@ export const LinkBadge = ({ content }) => (
             <Typography
                 use='body2'
                 tag='a'
-                href={content}
+                target="_blank"
+                href={sanitizeUrl(content)}
                 className='link'
                 theme={['link']}>
                 ({getDomain(content)})

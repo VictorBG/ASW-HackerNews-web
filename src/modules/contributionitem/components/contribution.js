@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Typography} from '@rmwc/typography'
 import {useDispatch, useSelector} from 'react-redux'
-import {contributionDetails, postComment} from '../duckies'
+import {contributionDetails, GET_CONTRIBUTION, postComment} from '../duckies'
 import {useHistory, useParams} from 'react-router-dom'
 import {formatTimeAgo} from "../../../common/utils/format/time";
 import styled from "styled-components";
@@ -12,6 +12,8 @@ import {Button} from "@rmwc/button";
 import {Card} from "@rmwc/card";
 import {isLink, isNotEmpty} from "../../../common/utils/format/text";
 import {ListToolbar} from "../../lists/components/list-toolbar";
+import {checkVote} from "../../lists/duckies";
+import {Loader} from "../../../common/components/loader";
 
 
 export const ContributionForm = () => {
@@ -23,7 +25,7 @@ export const ContributionForm = () => {
 
     useEffect(() => {
         dispatch(contributionDetails(id))
-    }, [id])
+    }, [])
 
     const [textComment, setTextComment] = useState('')
 
@@ -36,6 +38,10 @@ export const ContributionForm = () => {
         }
     }))
 
+    const like = item => {
+        dispatch(checkVote(item, contributionDetails(id)))
+    }
+
     const onCommentClick = () => {
         createComment()
     }
@@ -47,6 +53,7 @@ export const ContributionForm = () => {
                     history.push(`/?id=${pos}`)
                 }
             }} pos={5}/>
+            <Loader resourceName={GET_CONTRIBUTION}/>
             {!!contributionDetailsUI &&
             <ContributionDiv>
                 <MainContributionDiv>
@@ -66,6 +73,7 @@ export const ContributionForm = () => {
                                 checked={contributionDetailsUI.liked}
                                 onIcon="arrow_drop_down"
                                 icon="arrow_drop_up"
+                                onClick={() => like(contributionDetailsUI)}
                             />
                         </Tooltip>
                         <StyledSubTitle use="caption" tag="c">
@@ -75,7 +83,7 @@ export const ContributionForm = () => {
                             by {contributionDetailsUI.user.username}
                         </StyledSubTitle>
                         <StyledSubTitle use="caption" tag="a">
-                            {formatTimeAgo(contributionDetailsUI.createdAt)} ago
+                            {formatTimeAgo(contributionDetailsUI.createdAt)}
                         </StyledSubTitle>
                         <StyledSubTitle use="caption" tag="c">
                             {contributionDetailsUI.comments.length} comments
@@ -101,18 +109,18 @@ export const ContributionForm = () => {
                         </StyledTitle>}
                     </ContentDiv>
                     <CommentDiv>
-                        <TextField label="Your text"
-                                   textarea
-                                   outlined
-                                   rows={4}
-                                   cols={80}
-                                   helpText={{
-                                       persistent: true,
-                                       validationMsg: true,
-                                   }}
-                                   onChange={({target: {name, value}}) => {
-                                       setTextComment(value)
-                                   }}
+                        <StyledTextField label="Your text"
+                                         textarea
+                                         outlined
+                                         rows={4}
+                                         cols={80}
+                                         helpText={{
+                                             persistent: true,
+                                             validationMsg: true,
+                                         }}
+                                         onChange={({target: {name, value}}) => {
+                                             setTextComment(value)
+                                         }}
                         />
                     </CommentDiv>
                     <AddCommentButtonDiv>
@@ -127,11 +135,12 @@ export const ContributionForm = () => {
 
                     <CommentContainer style={{paddingLeft: comment.treeLength * 2}}>
                         <SubtitleDiv>
-                            <Tooltip content={contributionDetailsUI.liked ? 'Remove vote' : 'Upvote'}>
+                            <Tooltip content={comment.liked ? 'Remove vote' : 'Upvote'}>
                                 <IconButton
-                                    checked={contributionDetailsUI.liked}
+                                    checked={comment.liked}
                                     onIcon="arrow_drop_down"
                                     icon="arrow_drop_up"
+                                    onClick={() => like(comment)}
                                 />
                             </Tooltip>
                             <StyledSubTitle use="caption" tag="c">
@@ -141,7 +150,7 @@ export const ContributionForm = () => {
                                 {comment.user.username}
                             </StyledSubTitle>
                             <StyledSubTitle use="caption" tag="a" href={'/item/' + comment.id}>
-                                {formatTimeAgo(comment.createdAt)} ago
+                                {formatTimeAgo(comment.createdAt)}
                             </StyledSubTitle>
                         </SubtitleDiv>
                         <ContentDiv>
@@ -168,7 +177,7 @@ const ContributionDiv = styled(Card)`
     max-width: 1400px;
     float: none;
     margin: 0 auto; 
-    border-radius: 27px;
+    border-radius: 12px;
 `
 
 const MainContributionDiv = styled.div`
@@ -205,7 +214,7 @@ const AddCommentButtonDiv = styled.div`
 `
 
 const StyledButton = styled(Button)`
---mdc-typography-button-text-transform: none; 
+    --mdc-typography-button-text-transform: none; 
 `
 
 const StyledTitle = styled(Typography)`
@@ -215,4 +224,8 @@ const StyledTitle = styled(Typography)`
 const StyledSubTitle = styled(Typography)`
     margin-left: 10px;
     margin-top:15px;
+`
+
+const StyledTextField = styled(TextField)`
+     --mdc-theme-primary: #ff6600;   
 `

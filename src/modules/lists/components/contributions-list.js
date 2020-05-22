@@ -6,7 +6,7 @@ import {Button} from '@rmwc/button'
 import {formatTimeAgo} from '../../../common/utils/format/time'
 import {AskBadge} from './ask-badge'
 import {LinkBadge} from './link-badge'
-import {isLink} from '../../../common/utils/format/text'
+import {isLink, sanitizeUrl} from '../../../common/utils/format/text'
 import {IconButton} from '@rmwc/icon-button'
 import {Tooltip} from '@rmwc/tooltip'
 import {useDispatch} from "react-redux";
@@ -43,7 +43,7 @@ export const ContributionsList = ({list, indexList}) => {
                     <CardContainer>
                         <AskBadge content={item.content}/>
                         {isLink(item.content) &&
-                        <StyledTitle use="headline6" tag="a" href={item.content}>
+                        <StyledTitle use="headline6" tag="a" href={sanitizeUrl(item.content)} target="_blank">
                             {item.title}
                         </StyledTitle>}
                         {!isLink(item.content) &&

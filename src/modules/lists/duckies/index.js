@@ -1,4 +1,4 @@
-import {fork, put, race, takeLatest, take} from 'redux-saga/effects'
+import {fork, put, race, takeLatest, take, takeLeading} from 'redux-saga/effects'
 import {apiCall} from '../../../common/utils/network/crud'
 import {reducerFor} from '../../../common/utils/network/reducer-for'
 import {typesFor} from "../../../common/utils/network/types-for";
@@ -52,7 +52,7 @@ export function* listsSaga() {
     }
 
     function* watchVote() {
-        yield takeLatest(CHANGE_VOTE, handleVote)
+        yield takeLeading(CHANGE_VOTE, handleVote)
     }
 
     yield fork(watchFetchList)
