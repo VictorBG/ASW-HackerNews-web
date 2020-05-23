@@ -1,6 +1,7 @@
 import {apiCall} from '../../../common/utils/network/crud'
 import {fork, put, takeLatest} from 'redux-saga/effects'
 import {reducerFor} from '../../../common/utils/network/reducer-for'
+import {FETCH_LIST} from "../../lists/duckies";
 
 export const USER_PROFILE = 'USER_PROFILE'
 export const UPDATE_PROFILE = 'UPDATE_PROFILE'
@@ -12,8 +13,8 @@ export const profile = (id) => ({type: USER_PROFILE, id})
 export const userReducer = reducerFor(USER_PROFILE, null)
 
 export const updateProfile = (data, id) => ({type: UPDATE_PROFILE, ...data, id})
-export const getUpVotedSubmissions = (id) => ({type: USER_PROFILE, id})
-export const getUpVotedComments =(id) => ({type: USER_PROFILE, id})
+export const getUpVotedSubmissions = () => ({type: VOTED_SUBMISSIONS})
+export const getUpVotedComments =() => ({type: VOTED_COMMENTS})
 
 function* handleUserProfile({id}) {
   yield put(apiCall(USER_PROFILE, `/user/${id}`).fetch())
@@ -23,11 +24,11 @@ function* handleUpdateProfile({payload}) {
   yield put(apiCall(USER_PROFILE, `/user`).update(payload))
 }
 
-function * handleListVotedSubmissions(id) {
-  yield put(apiCall(VOTED_SUBMISSIONS, `/upVotedSubmissions/${id}`)).fetch()
+function * handleListVotedSubmissions() {
+  yield put(apiCall(VOTED_SUBMISSIONS, '/upVotedSubmissions', data => data.item).fetch())
 }
 function * handleListVotedComments(id) {
-  yield put(apiCall(VOTED_COMMENTS, `/upVotedComments/${id}`)).fetch()
+  yield put(apiCall(VOTED_COMMENTS, '/upVotedComments').fetch())
 }
 
 export function* profileSaga() {
