@@ -1,19 +1,18 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import {TextField} from '@rmwc/textfield'
-import {useDispatch, useSelector} from 'react-redux'
-import {ListToolbar} from '../../lists/components/list-toolbar'
-import {Card} from '@rmwc/card'
+import { TextField } from '@rmwc/textfield'
+import { useDispatch, useSelector } from 'react-redux'
+import { ListToolbar } from '../../lists/components/list-toolbar'
+import { Card } from '@rmwc/card'
 import '@rmwc/select/styles'
-import {Select} from '@rmwc/select'
-import {Button} from '@rmwc/button'
+import { Select } from '@rmwc/select'
+import { Button } from '@rmwc/button'
 import '@rmwc/button/styles'
-import {profile} from '../patitos/index'
-import {useHistory, useParams} from 'react-router-dom'
-import {getUpVotedComments, getUpVotedSubmissions, updateProfile} from "../patitos";
-import {Typography} from "@rmwc/typography";
-import {formatTimeAgo} from "../../../common/utils/format/time";
-
+import { profile } from '../patitos/index'
+import { useHistory, useParams } from 'react-router-dom'
+import { updateProfile } from '../patitos'
+import { Typography } from '@rmwc/typography'
+import { formatTimeAgo } from '../../../common/utils/format/time'
 
 export const UserProfileForm = () => {
     const dispatch = useDispatch()
@@ -170,10 +169,10 @@ export const UserProfileForm = () => {
                                          }}/>
                     </Divisor>
                     <Divisor>
-                        <CustomButton label="See my upvoted submissions"
+                        <CustomButton label="Submissions"
                                       raised
                                       onClick={() => onUpVotedSubmissionsClick()}/>
-                        <CustomButton label="See my upvoted comments"
+                        <CustomButton label="Comments"
                                       raised
                                       onClick={() => onUpVotedCommentsClick()}/>
                     </Divisor>
