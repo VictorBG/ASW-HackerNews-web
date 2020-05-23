@@ -47,6 +47,12 @@ function App () {
                     <Route path='/user/:id'>
                         <UserProfileForm/>
                     </Route>
+                    <Route path='/upvotedSubmissions/:id'>
+                        <UpvotedSubmissions/>
+                    </Route>
+                    <Route path='/upvotedComments/:id'>
+                        <UpvotedComments/>
+                    </Route>
                     <Route path='/'>
                         <ListScreen/>
                     </Route>

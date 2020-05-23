@@ -67,8 +67,12 @@ export const UserProfileForm = () => {
         updateForm()
     }
 
-    const onUpVotedSubmissionsClick = () => (dispatch(getUpVotedSubmissions()))
-    const onUpVotedCommentsClick = () => (dispatch(getUpVotedComments()))
+    const onUpVotedSubmissionsClick = () =>  {
+        history.push(`/upvotedSubmissions/${id}`)
+    }
+    const onUpVotedCommentsClick = () => {
+        history.push(`/upvotedComments/${id}`)
+    }
 
     // 5 is a random number to be out of range, so no tab is selected
     return (<>
