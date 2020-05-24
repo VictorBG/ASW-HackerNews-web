@@ -72,6 +72,12 @@ export const UserProfileForm = () => {
     const onUpVotedCommentsClick = () => {
         history.push(`/upvotedComments/${id}`)
     }
+    const onSubmissionsClick = () => {
+        history.push(`/submissions/${id}`)
+    }
+    const onCommentsClick = () => {
+        history.push(`/threads/${id}`)
+    }
 
     // 5 is a random number to be out of range, so no tab is selected
     return (<>
@@ -169,12 +175,20 @@ export const UserProfileForm = () => {
                                          }}/>
                     </Divisor>
                     <Divisor>
-                        <CustomButton label="Submissions"
+                        <CustomButton label="See my upvoted submissions"
                                       raised
                                       onClick={() => onUpVotedSubmissionsClick()}/>
-                        <CustomButton label="Comments"
+                        <CustomButton label="See my upvoted comments"
                                       raised
                                       onClick={() => onUpVotedCommentsClick()}/>
+                    </Divisor>
+                    <Divisor>
+                        <CustomButton label="Submissions"
+                                      raised
+                                      onClick={() => onSubmissionsClick()}/>
+                        <CustomButton label="Comments"
+                                      raised
+                                      onClick={() => onCommentsClick()}/>
                     </Divisor>
                     <Divisor>
                         <CustomButton label="Update Profile"

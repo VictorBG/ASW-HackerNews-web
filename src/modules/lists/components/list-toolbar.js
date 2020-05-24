@@ -12,7 +12,7 @@ export const ListToolbar = ({ onClick, pos = 0 }) => {
     const [position, setPosition] = useState(Number(query.get('id')) || pos)
     const history = useHistory()
 
-    const { idUser } = useSelector(state => state.user)
+    const { id } = useSelector(state => state.user)
 
     const onClickButton = (pos) => {
         setPosition(pos)
@@ -24,7 +24,7 @@ export const ListToolbar = ({ onClick, pos = 0 }) => {
     }, [history])
 
     const threadsClick = useCallback(() => {
-        history.push(`/threads/${idUser}`)
+        history.push(`/threads/${id}`)
     })
 
     useEffect(() => {
@@ -41,7 +41,7 @@ export const ListToolbar = ({ onClick, pos = 0 }) => {
                                 onClick={() => onClickButton(i)}
                                 key={i}/>)}
                     <Button label='Threads'
-                            theme={6 === position ? 'onPrimary' : 'textSecondaryOnDark'}
+                            theme={4 === position ? 'onPrimary' : 'textSecondaryOnDark'}
                             onClick={threadsClick}/>
                     <Button label='Submit' raised
                             theme={['secondaryBg', 'primary']}

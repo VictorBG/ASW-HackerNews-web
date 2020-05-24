@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useEffect } from 'react'
-import { FETCH_LIST, fetchThreads } from '../duckies/index'
+import {FETCH_LIST, FETCH_THREAD, fetchThreads} from '../duckies/index'
 import { ListToolbar } from './list-toolbar'
 import { Loader } from '../../../common/components/loader'
 import { ContributionsList } from './contributions-list'
@@ -15,8 +15,9 @@ export const Threads = () => {
     const history = useHistory()
 
     const navigate = index => {
-        history.push(`/?id=${index}`)
+            history.push(`/?id=${index}`)
     }
+
 
     useEffect(() => {
         dispatch(fetchThreads(id))
@@ -24,8 +25,13 @@ export const Threads = () => {
 
     return (
         <>
-            <ListToolbar onClick={(pos) => (navigate(pos))}/>
-            <Loader resourceName={FETCH_LIST}/>
+            <ListToolbar onClick={(pos) => {
+                if(pos !== 4) {
+                    (navigate(pos))
+                }
+
+            }} pos={4}/>
+            <Loader resourceName={FETCH_THREAD}/>
 
             <ContributionsContainer>
                 <ContributionsList list={list} likeClickRefetch={fetchThreads(id)}/>
