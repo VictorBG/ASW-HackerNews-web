@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {Card} from '@rmwc/card'
 import {Typography} from '@rmwc/typography'
 import styled from 'styled-components'
@@ -6,41 +6,44 @@ import {Button} from '@rmwc/button'
 import {formatTimeAgo} from '../../../common/utils/format/time'
 import {AskBadge} from './ask-badge'
 import {LinkBadge} from './link-badge'
-import {isLink} from '../../../common/utils/format/text'
+import {isLink, sanitizeUrl} from '../../../common/utils/format/text'
 import {IconButton} from '@rmwc/icon-button'
 import {Tooltip} from '@rmwc/tooltip'
-import { useHistory } from 'react-router-dom'
+import {useDispatch} from "react-redux";
+import {useHistory} from 'react-router-dom'
+import {checkVote, fetchList} from "../duckies";
 
-export const ContributionsList = ({list}) => {
+export const ContributionsList = ({list, indexList}) => {
 
     const history = useHistory()
+
+    const dispatch = useDispatch()
 
     const goToProfile = (id) => {
         history.push(`/user/${id}`)
     }
 
-    return (
+    const onClickButton = (item) => (dispatch(checkVote(item, fetchList(indexList))))
 
+    return (
         <>
             {list.map(item =>
-                <ContributionCard>
+                <ContributionCard key={item.id}>
                     <LikeContainer>
-                        <Tooltip
-                            content={item.liked ? 'Remove vote' : 'Upvote'}>
+                        <Tooltip content={item.liked ? 'Remove vote' : 'Upvote'}>
                             <IconButton
                                 checked={item.liked}
                                 onIcon="arrow_drop_down"
                                 icon="arrow_drop_up"
+                                onClick={() => onClickButton(item)}
                             />
                         </Tooltip>
-                        <Typography use='headline5'
-                                    tag='div'>{item.points}</Typography>
+                        <Typography use='headline5' tag='div'>{item.points}</Typography>
                     </LikeContainer>
                     <CardContainer>
                         <AskBadge content={item.content}/>
                         {isLink(item.content) &&
-                        <StyledTitle use="headline6" tag="a"
-                                     href={item.content}>
+                        <StyledTitle use="headline6" tag="a" href={sanitizeUrl(item.content)} target="_blank">
                             {item.title}
                         </StyledTitle>}
                         {!isLink(item.content) &&
@@ -53,8 +56,8 @@ export const ContributionsList = ({list}) => {
                             <StyledUsernameButton
                                 label={item.user.username}
                                 icon="person_outline"
-                                theme={['onSecondary']}
-                                onClick={()=>goToProfile(item.user.id)}/>
+                                onClick={() => goToProfile(item.user.id)}
+                                theme={['onSecondary']}/>
                             <StyledTimeButton
                                 label={formatTimeAgo(item.createdAt)}
                                 icon="schedule"
@@ -64,8 +67,7 @@ export const ContributionsList = ({list}) => {
                                 tag="a"
                                 label={item.commentsLength === 0
                                     ? 'discuss'
-                                    : item.commentsLength + ' comment'
-                                    + (item.commentsLength !== 1 ? 's' : '')}
+                                    : item.commentsLength + ' comment' + (item.commentsLength !== 1 ? 's' : '')}
                                 icon="bubble_chart"
                                 onClick={() => {
                                     history.push(`/item/${item.id}`)
@@ -78,6 +80,7 @@ export const ContributionsList = ({list}) => {
         </>
     )
 }
+
 
 const ContributionCard = styled(Card)`
     margin-bottom: 20px;

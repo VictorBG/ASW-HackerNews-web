@@ -50,29 +50,27 @@ export const CreateForm = () => {
                         }}>
                         </StyledTextField>
                     </CenteredContainer>
-
+                    <CenteredContainerOr>
+                        <Typography use="subtitle2" tag="p">OR</Typography>
+                    </CenteredContainerOr>
                     <CenteredContainer>
-                        <Typography use="subtitle2" tag="h3">OR</Typography>
-                    </CenteredContainer>
-
-                    <CenteredContainer>
-                        <TextField label="Your text"
-                                   textarea
-                                   outlined
-                                   rows={4}
-                                   cols={80}
-                                   helpText={{
-                                       persistent: true,
-                                       validationMsg: true,
-                                   }}
-                                   onChange={({target: {name, value}}) => {
-                                       setTextInput(value)
-                                   }}
+                        <StyledTextField label="Your text"
+                                         textarea
+                                         outlined
+                                         rows={4}
+                                         cols={80}
+                                         helpText={{
+                                             persistent: true,
+                                             validationMsg: true,
+                                         }}
+                                         onChange={({target: {name, value}}) => {
+                                             setTextInput(value)
+                                         }}
                         />
                     </CenteredContainer>
                     <StyledButton label='Submit' raised
-                            theme={['secondaryBg', 'primary']}
-                            onClick={() => onClickButton()}
+                                  theme={['secondaryBg', 'primary']}
+                                  onClick={() => onClickButton()}
                     />
                 </FormCard>
             </CenteredContainer>
@@ -91,14 +89,23 @@ const FormCard = styled(Card)`
 `
 
 const CenteredContainer = styled.div`
-    padding: 1rem;
+    padding: 20px;
     margin: auto;
+    width: 90%;
+`
+
+const CenteredContainerOr = styled.div`
+    padding-left: 20px;
+    margin: auto;
+    width: 90%;
 `
 
 const StyledTextField = styled(TextField)`
-    width: 42vw;
+    width: 100%;
     margin: auto;
+    --mdc-theme-primary: #ff6600;   
 `
+
 const StyledButton = styled(Button)`
     width: 70%;
     margin: auto;

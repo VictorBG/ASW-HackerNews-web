@@ -6,3 +6,6 @@ export const isLink = text => !!urlRegExp.test(text)
 export const getDomain = text => urlRegExp.exec(text)[0] || ''
 
 export const isNotEmpty = text => !!text
+
+export const sanitizeUrl = url => url.startsWith('http') ? url : `http://${url}`
+

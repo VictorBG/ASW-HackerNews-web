@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { call, fork, put, select, takeEvery } from 'redux-saga/effects'
-import { CRUD_ERROR } from '../../components/snackbar-error'
-import { CREATE, DELETE, FETCH, START, typesFor, UPDATE } from './types-for'
-import { LOADING_CHANGE } from '../../components/loader'
+import {call, fork, put, select, takeEvery} from 'redux-saga/effects'
+import {CRUD_ERROR} from '../../components/snackbar-error'
+import {CREATE, DELETE, FETCH, START, typesFor, UPDATE} from './types-for'
+import {LOADING_CHANGE} from '../../components/loader'
 
 /**
  * Performs an operation on the API and dispatches the result to success or fail, whatever
@@ -15,8 +15,8 @@ import { LOADING_CHANGE } from '../../components/loader'
  * @param transform    Transform to apply to the data of the call when it is dispatched
  * @param silent
  */
-function * doRequest (resource, request, success, fail, transform = (transform) => transform, silent = false) {
-    yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: true })
+function* doRequest(resource, request, success, fail, transform = (transform) => transform, silent = false) {
+    yield put({type: LOADING_CHANGE, resourceName: resource, loadingStatus: true})
 
     if (!axios.defaults.headers.common.Authorization) {
         const user = yield select((state) => state.user)
@@ -33,18 +33,21 @@ function * doRequest (resource, request, success, fail, transform = (transform) 
 
     try {
         const response = yield request
-        yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: false })
-        yield put({ type: success, data: transform(response.data) })
+        yield put({type: LOADING_CHANGE, resourceName: resource, loadingStatus: false})
+        yield put({type: success, data: transform(response.data)})
     } catch (error) {
         // dispatches a CRUD_ERROR so the error snackbar can be shown
         // it first dispatches a null CRUD_ERROR to remove any previous error
-        yield put({ type: LOADING_CHANGE, resourceName: resource, loadingStatus: false })
-        const message = !!error.response.data.message? error.response.data.message : 'Could not connect to the server'
+        yield put({type: LOADING_CHANGE, resourceName: resource, loadingStatus: false})
+        const message = !!error.response && !!error.response.data && !!error.response.data.message
+            ? error.response.data.message
+            : 'Could not connect to the server'
+
         if (!silent) {
-            yield put({ type: CRUD_ERROR, message: null })
-            yield put({ type: CRUD_ERROR, message })
+            yield put({type: CRUD_ERROR, message: null})
+            yield put({type: CRUD_ERROR, message})
         }
-        yield put({ type: fail, error })
+        yield put({type: fail, error})
     }
 }
 
@@ -58,77 +61,77 @@ function * doRequest (resource, request, success, fail, transform = (transform) 
  * It also accepts a transform function to transform the response data of the call
  *
  */
-function crudHandlers () {
+function crudHandlers() {
     return {
         fetch: function (action) {
-            const { fetchSuccess, fetchError } = typesFor(action.name)
+            const {fetchSuccess, fetchError} = typesFor(action.name)
             return doRequest(action.name, call(axios.get, action.endpoint), fetchSuccess, fetchError, action.transform, action.silent)
         },
         create: function (action) {
-            const { createSuccess, createError } = typesFor(action.name)
+            const {createSuccess, createError} = typesFor(action.name)
             return doRequest(action.name, call(axios.post, action.endpoint, action.data), createSuccess, createError, action.transform, action.silent)
         },
         update: function (action) {
-            const { updateSuccess, updateError } = typesFor(action.name)
+            const {updateSuccess, updateError} = typesFor(action.name)
             return doRequest(action.name, call(axios.put, action.endpoint, action.data), updateSuccess, updateError, action.transform, action.silent)
         },
         delete: function (action) {
-            const { deleteSuccess, deleteError } = typesFor(action.name)
+            const {deleteSuccess, deleteError} = typesFor(action.name)
             return doRequest(action.name, call(axios.delete, action.endpoint), deleteSuccess, deleteError, action.transform, action.silent)
         }
     }
 }
 
-export function apiCall (name, endpoint, transform = (transform) => transform) {
+export function apiCall(name, endpoint, transform = (transform) => transform) {
     return {
         fetch: function () {
-            const { fetchStart } = typesFor(name)
-            return { type: fetchStart, name, endpoint, transform }
+            const {fetchStart} = typesFor(name)
+            return {type: fetchStart, name, endpoint, transform}
         },
         create: function (data) {
-            const { createStart } = typesFor(name)
-            return { type: createStart, name, endpoint, transform, data }
+            const {createStart} = typesFor(name)
+            return {type: createStart, name, endpoint, transform, data}
         },
         update: function (data) {
-            const { updateStart } = typesFor(name)
-            return { type: updateStart, name, endpoint, transform, data }
+            const {updateStart} = typesFor(name)
+            return {type: updateStart, name, endpoint, transform, data}
         },
         delete: function () {
-            const { deleteStart } = typesFor(name)
-            return { type: deleteStart, name, endpoint, transform }
+            const {deleteStart} = typesFor(name)
+            return {type: deleteStart, name, endpoint, transform}
         },
         fetchSilent: function () {
-            return { ...this.fetch(), silent: true }
+            return {...this.fetch(), silent: true}
         },
         createSilent: function (data) {
-            return { ...this.create(data), silent: true }
+            return {...this.create(data), silent: true}
         },
         updateSilent: function (data) {
-            return { ...this.update(data), silent: true }
+            return {...this.update(data), silent: true}
         },
         deleteSilent: function () {
-            return { ...this.delete(), silent: true }
+            return {...this.delete(), silent: true}
         }
     }
 }
 
-export function * crudSaga () {
+export function* crudSaga() {
     const start = (a) => (action) => action.type.endsWith(`${a}_${START}`)
     const handlers = crudHandlers()
 
-    function * watchFetch () {
+    function* watchFetch() {
         yield takeEvery(start(FETCH), handlers.fetch)
     }
 
-    function * watchCreate () {
+    function* watchCreate() {
         yield takeEvery(start(CREATE), handlers.create)
     }
 
-    function * watchUpdate () {
+    function* watchUpdate() {
         yield takeEvery(start(UPDATE), handlers.update)
     }
 
-    function * watchDelete () {
+    function* watchDelete() {
         yield takeEvery(start(DELETE), handlers.delete)
     }
 
@@ -143,6 +146,6 @@ export function * crudSaga () {
  *
  * @param config The configuration to add
  */
-export function setRequestDefaults (config) {
+export function setRequestDefaults(config) {
     Object.assign(axios.defaults, config)
 }
