@@ -3,7 +3,7 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { crudSaga, setRequestDefaults } from '../common/utils/network/crud'
 import { errorReducer } from '../common/components/snackbar-error'
-import { BASE_URL_DEV } from '../common/constants/index'
+import { BASE_URL } from '../common/constants/index'
 import { linearLoadingReducer } from '../common/components/loader'
 import { contributionSaga } from '../modules/create/duckies'
 import {contributionDetailsReducer, contributionDetailsSaga} from "../modules/contributionitem/duckies";
@@ -28,7 +28,7 @@ const rootReducer = persistReducer({
 }, (state, action) => {
     if (action.type === 'LOGOUT') {
         state = undefined
-        setRequestDefaults({ baseURL: BASE_URL_DEV })
+        setRequestDefaults({ baseURL: BASE_URL })
     }
     return appReducer(state, action)
 })
@@ -46,6 +46,6 @@ sagaMiddleware.run(contributionDetailsSaga)
 sagaMiddleware.run(loginSaga)
 sagaMiddleware.run(profileSaga)
 
-setRequestDefaults({ baseURL: BASE_URL_DEV })
+setRequestDefaults({ baseURL: BASE_URL })
 
 export default store
