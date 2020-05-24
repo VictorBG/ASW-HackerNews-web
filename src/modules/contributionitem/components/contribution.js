@@ -25,7 +25,7 @@ export const ContributionForm = () => {
 
     useEffect(() => {
         dispatch(contributionDetails(id))
-    }, [])
+    }, [id])
 
     const [textComment, setTextComment] = useState('')
 
@@ -76,7 +76,7 @@ export const ContributionForm = () => {
                                 onClick={() => like(contributionDetailsUI)}
                             />
                         </Tooltip>
-                        <StyledSubTitle use="caption" tag="c">
+                        <StyledSubTitle use="caption">
                             {contributionDetailsUI.points} points
                         </StyledSubTitle>
                         <StyledSubTitle use="caption" tag="a" href={'/user/' + contributionDetailsUI.user.id}>
@@ -85,7 +85,7 @@ export const ContributionForm = () => {
                         <StyledSubTitle use="caption" tag="a">
                             {formatTimeAgo(contributionDetailsUI.createdAt)}
                         </StyledSubTitle>
-                        <StyledSubTitle use="caption" tag="c">
+                        <StyledSubTitle use="caption">
                             {contributionDetailsUI.comments.length} comments
                         </StyledSubTitle>
 
@@ -133,7 +133,7 @@ export const ContributionForm = () => {
 
                 {[...contributionDetailsUI.comments].map((comment) =>
 
-                    <CommentContainer style={{paddingLeft: comment.treeLength * 2}}>
+                    <CommentContainer key={comment.id} style={{paddingLeft: comment.treeLength * 2}}>
                         <SubtitleDiv>
                             <Tooltip content={comment.liked ? 'Remove vote' : 'Upvote'}>
                                 <IconButton
@@ -143,7 +143,7 @@ export const ContributionForm = () => {
                                     onClick={() => like(comment)}
                                 />
                             </Tooltip>
-                            <StyledSubTitle use="caption" tag="c">
+                            <StyledSubTitle use="caption">
                                 {comment.points} points
                             </StyledSubTitle>
                             <StyledSubTitle use="caption" tag="a" href={'/user/' + contributionDetailsUI.user.id}>
@@ -154,7 +154,7 @@ export const ContributionForm = () => {
                             </StyledSubTitle>
                         </SubtitleDiv>
                         <ContentDiv>
-                            <StyledTitle use="subtitle2" tag="s2">
+                            <StyledTitle use="subtitle2">
                                 {comment.content}
                             </StyledTitle>
                         </ContentDiv>
