@@ -7,10 +7,12 @@ import { LOADING_CHANGE } from '../../../common/components/loader'
 
 export const FETCH_LIST = 'FETCH_LIST'
 export const FETCH_THREAD = 'FETCH_THREAD'
+export const FETCH_SUBMISSIONS = 'FETCH_SUBMISSIONS'
 export const CHANGE_VOTE = 'CHANGE_VOTE'
 
 export const fetchList = index => ({ type: FETCH_LIST, index })
 export const fetchThreads = id => ({ type: FETCH_THREAD, id })
+export const fetchSubmissions = id => ({ type: FETCH_SUBMISSIONS, id })
 export const checkVote = (item, refetch) => ({ type: CHANGE_VOTE, item: item, refetch: refetch })
 
 export const listsReducer = reducerFor(FETCH_LIST, [])
@@ -23,14 +25,18 @@ function * handleFetchListThread ({ id }) {
     yield put(apiCall(FETCH_LIST, `/threads?user=${id}`, data => data.items).fetch())
 }
 
+function * handleFetchListSubmissions ({ id }) {
+    yield put(apiCall(FETCH_LIST, `/submissions?user=${id}`, data => data.items).fetch())
+}
+
 const ENDPOINTS = [
     '/main',
     '/newest',
     '/urls',
     '/ask',
-    '',
-    '/upvotedComments',
-    '/upvotedSubmissions'
+    '/threads?user=:id',
+    '/upVotedSubmissions',
+    '/upVotedComments'
 ]
 
 export function * handleVote ({ item, refetch }) {
@@ -62,12 +68,17 @@ export function * listsSaga () {
         yield takeLatest(FETCH_THREAD, handleFetchListThread)
     }
 
+    function * watchFetchListSubmissions () {
+        yield takeLatest(FETCH_SUBMISSIONS, handleFetchListSubmissions)
+    }
+
     function * watchVote () {
         yield takeLeading(CHANGE_VOTE, handleVote)
     }
 
     yield fork(watchFetchList)
     yield fork(watchFetchListThreads)
+    yield fork(watchFetchListSubmissions)
     yield fork(watchVote)
 }
 

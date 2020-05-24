@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 import { useQuery } from '../../../index'
 import { useSelector } from 'react-redux'
 
-export const ListToolbar = ({ onClick, pos = 0 }) => {
+export const ListToolbar = ({ onClick, pos = 0, extraItems }) => {
     const query = useQuery()
     const [position, setPosition] = useState(Number(query.get('id')) || pos)
     const history = useHistory()
@@ -43,6 +43,7 @@ export const ListToolbar = ({ onClick, pos = 0 }) => {
                     <Button label='Threads'
                             theme={4 === position ? 'onPrimary' : 'textSecondaryOnDark'}
                             onClick={threadsClick}/>
+                    {extraItems}
                     <Button label='Submit' raised
                             theme={['secondaryBg', 'primary']}
                             onClick={submit}/>

@@ -1,16 +1,18 @@
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useEffect } from 'react'
-import { FETCH_LIST, fetchThreads } from '../duckies/index'
+import { FETCH_LIST, fetchSubmissions } from '../duckies/index'
 import { ListToolbar } from './list-toolbar'
 import { Loader } from '../../../common/components/loader'
 import { ContributionsList } from './contributions-list'
-import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { Typography } from '@rmwc/typography'
 
-export const Threads = () => {
+export const Submissions = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
     const list = useSelector(state => state.list || [])
+    const profile = useSelector(state => state.user.id === id ? state.user : state.profile || { username: '' })
 
     const history = useHistory()
 
@@ -18,22 +20,26 @@ export const Threads = () => {
         history.push(`/?id=${index}`)
     }
 
+    const getToolbarItem = () => <ToolbarText use='button'>{profile.username} Submissions</ToolbarText>
+
     useEffect(() => {
-        dispatch(fetchThreads(id))
+        dispatch(fetchSubmissions(id))
     }, [])
 
     return (
         <>
             <ListToolbar onClick={(pos) => {
-                if (pos !== 4) {
+                if (pos < 4) {
                     navigate(pos)
                 }
-            }} pos={4}/>
+                else if (pos === 4) {
+                    history.push(`/threads/${id}`)
+                }
+            }} pos={90} extraItems={getToolbarItem()}/>
             <Loader resourceName={FETCH_LIST}/>
 
             <ContributionsContainer>
-                <ContributionsList list={list.map(item => Object.assign({}, item, { title: item.content }))}
-                                   likeClickRefetch={fetchThreads(id)} showBadges={false}/>
+                <ContributionsList list={list} likeClickRefetch={fetchSubmissions(id)} showBadges/>
             </ContributionsContainer>
         </>
     )
@@ -51,3 +57,7 @@ const ContributionsContainer = styled(CenteredContainer)`
     margin: 0 auto;
 `
 
+const ToolbarText = styled(Typography)`
+    margin-left:20px;
+    margin-right: 20px
+`

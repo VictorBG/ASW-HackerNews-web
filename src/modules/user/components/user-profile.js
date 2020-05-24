@@ -1,25 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { TextField } from '@rmwc/textfield'
 import { useDispatch, useSelector } from 'react-redux'
 import { ListToolbar } from '../../lists/components/list-toolbar'
-import { Card } from '@rmwc/card'
-import '@rmwc/select/styles'
-import { Select } from '@rmwc/select'
-import { Button } from '@rmwc/button'
-import '@rmwc/button/styles'
 import { profile } from '../patitos/index'
 import { useHistory, useParams } from 'react-router-dom'
 import { updateProfile } from '../patitos'
 import { Typography } from '@rmwc/typography'
 import { formatTimeAgo } from '../../../common/utils/format/time'
+import { Button } from '@rmwc/button'
+import { TextField } from '@rmwc/textfield'
+import { Select } from '@rmwc/select'
+import styled from 'styled-components'
+import { Card } from '@rmwc/card'
 
 export const UserProfileForm = () => {
     const dispatch = useDispatch()
     const loggedUser = useSelector((state) => state.user)
     const userProfile = useSelector((state) => state.profile)
 
-    const {id} = useParams()
+    const { id } = useParams()
     const history = useHistory()
 
     const [aboutInput, setAboutInput] = useState('')
@@ -31,7 +29,7 @@ export const UserProfileForm = () => {
     const [showDead, setShowDead] = useState('No')
 
     const logout = useCallback(() => {
-        dispatch({type: 'LOGOUT'})
+        dispatch({ type: 'LOGOUT' })
     }, [])
 
     useEffect(() => {
@@ -66,11 +64,11 @@ export const UserProfileForm = () => {
         updateForm()
     }
 
-    const onUpVotedSubmissionsClick = () =>  {
-        history.push(`/upvotedSubmissions/${id}`)
+    const onUpVotedSubmissionsClick = () => {
+        history.push(`/upvotedSubmissions`)
     }
     const onUpVotedCommentsClick = () => {
-        history.push(`/upvotedComments/${id}`)
+        history.push(`/upvotedComments`)
     }
     const onSubmissionsClick = () => {
         history.push(`/submissions/${id}`)
@@ -109,7 +107,7 @@ export const UserProfileForm = () => {
                                          persistent: true,
                                          validationMsg: true
                                      }}
-                                     onChange={({target: {value}}) => {
+                                     onChange={({ target: { value } }) => {
                                          setAboutInput(value)
                                      }}
                                      theme={['onSecondary']}
@@ -130,7 +128,7 @@ export const UserProfileForm = () => {
                     <Divisor>
                         <CustomTextField outlined label="Email"
                                          value={emailInput}
-                                         onChange={({target: {value}}) => {
+                                         onChange={({ target: { value } }) => {
                                              setEmailInput(value)
                                          }}/>
                     </Divisor>
@@ -156,50 +154,55 @@ export const UserProfileForm = () => {
                     <Divisor>
                         <CustomTextField outlined label="Max Visit"
                                          value={maxVisitInput}
-                                         onChange={({target: {value}}) => {
+                                         onChange={({ target: { value } }) => {
                                              setMaxVisitInput(value)
                                          }}/>
                     </Divisor>
                     <Divisor>
                         <CustomTextField outlined label="Min Away"
                                          value={minAwayInput}
-                                         onChange={({target: {value}}) => {
+                                         onChange={({ target: { value } }) => {
                                              setMinAwayInput(value)
                                          }}/>
                     </Divisor>
                     <Divisor>
                         <CustomTextField outlined label="Delay"
                                          value={delayInput}
-                                         onChange={({target: {value}}) => {
+                                         onChange={({ target: { value } }) => {
                                              setDelayInput(value)
                                          }}/>
                     </Divisor>
-                    <Divisor>
-                        <CustomButton label="See my upvoted submissions"
-                                      raised
-                                      onClick={() => onUpVotedSubmissionsClick()}/>
-                        <CustomButton label="See my upvoted comments"
-                                      raised
-                                      onClick={() => onUpVotedCommentsClick()}/>
-                    </Divisor>
-                    <Divisor>
-                        <CustomButton label="Submissions"
-                                      raised
-                                      onClick={() => onSubmissionsClick()}/>
-                        <CustomButton label="Comments"
-                                      raised
-                                      onClick={() => onCommentsClick()}/>
-                    </Divisor>
-                    <Divisor>
-                        <CustomButton label="Update Profile"
-                                      raised
-                                      onClick={() => onUpdateClick()}/>
-                        <CustomButton label="Logout"
-                                      onClick={logout}
-                                      danger/>
-                    </Divisor>
+
+                    <ButtonContainer>
+                        <TextButton label="See my upvoted submissions"
+                                    onClick={() => onUpVotedSubmissionsClick()}/>
+                    </ButtonContainer>
+                    <ButtonContainer>
+                        <TextButton label="See my upvoted comments"
+                                    onClick={() => onUpVotedCommentsClick()}/>
+                    </ButtonContainer>
 
                 </div>
+                }
+                <ButtonContainer>
+                    <TextButton label="Submissions"
+                                onClick={() => onSubmissionsClick()}/>
+                </ButtonContainer>
+                <ButtonContainer>
+                    <TextButton label="Comments"
+                                onClick={() => onCommentsClick()}/>
+                </ButtonContainer>
+                {loggedUser.id === userProfile.id &&
+                <Divisor>
+                    <CustomButton label="Update Profile"
+                                  raised
+                                  onClick={() => onUpdateClick()}/>
+
+                    <CustomButton label="Logout"
+                                  onClick={logout}
+                                  outlined
+                                  danger/>
+                </Divisor>
                 }
             </FormCard>
             }
@@ -208,31 +211,39 @@ export const UserProfileForm = () => {
 }
 
 const Divisor = styled.div`
-    padding: 1rem;
-`
+        padding: 1rem;
+        `
 
 const FormCard = styled(Card)`
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom:20px;
-    max-width: 1280px;
-    float: none;
-    margin: 0 auto;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom:20px;
+        max-width: 1280px;
+        float: none;
+        margin: 0 auto;
 `
 
 const CustomTextField = styled(TextField)`
-    width: 100%;
-    --mdc-theme-primary: #ff6600;
+        width: 100%;
+        --mdc-theme-primary: #ff6600;
 `
 
 const CustomButton = styled(Button)`
-    width: 50%
+    width: 50%;
+`
+
+const TextButton = styled(Button)`
+    --mdc-theme-primary: #ff6600;
 `
 
 const SmallerSelector = styled(Select)`
-    width: 100%;
-    --mdc-theme-primary: #ff6600;
+        width: 100%;
+        --mdc-theme-primary: #ff6600;
 `
 const PinkText = styled(Typography)`
-    color: #FF0080 
+        color: #FF0080
+`
+
+const ButtonContainer = styled.div`
+    padding:5px;
 `

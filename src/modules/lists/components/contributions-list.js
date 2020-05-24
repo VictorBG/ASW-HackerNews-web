@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { checkVote } from '../duckies'
 
-export const ContributionsList = ({ list, likeClickRefetch }) => {
+export const ContributionsList = ({ list, likeClickRefetch, showBadges = true }) => {
 
     const history = useHistory()
 
@@ -41,7 +41,9 @@ export const ContributionsList = ({ list, likeClickRefetch }) => {
                         <Typography use='headline5' tag='div'>{item.points}</Typography>
                     </LikeContainer>
                     <CardContainer>
+                        {!!showBadges &&
                         <AskBadge content={item.content}/>
+                        }
                         {isLink(item.content) &&
                         <StyledTitle use="headline6" tag="a" href={sanitizeUrl(item.content)} target="_blank">
                             {item.title}
@@ -50,8 +52,9 @@ export const ContributionsList = ({ list, likeClickRefetch }) => {
                         <StyledTitle use="headline6" tag="h2">
                             {item.title}
                         </StyledTitle>}
-
+                        {!!showBadges &&
                         <LinkBadge content={item.content}/>
+                        }
                         <CardContent>
                             <StyledUsernameButton
                                 label={item.user.username}
