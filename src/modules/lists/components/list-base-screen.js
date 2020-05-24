@@ -6,11 +6,11 @@ import styled from 'styled-components'
 import { Loader } from '../../../common/components/loader'
 import { ListToolbar } from './list-toolbar'
 
-export const ListScreen = () => {
+export const ListScreen = ({actualList = 0}) => {
     const dispatch = useDispatch()
     const list = useSelector(state => state.list || [])
 
-    const [index, setIndex] = useState(0)
+    const [index, setIndex] = useState(actualList)
 
     const fetch = index => {
         setIndex(index)

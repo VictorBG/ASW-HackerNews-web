@@ -20,7 +20,7 @@ function * handleFetchList ({ index }) {
 }
 
 function * handleFetchListThread ({ id }) {
-    yield put(apiCall(FETCH_LIST, `/threads/${id}`, data => data.items).fetch())
+    yield put(apiCall(FETCH_LIST, `/threads?user=${id}`, data => data.items).fetch())
 }
 
 const ENDPOINTS = [
@@ -28,6 +28,7 @@ const ENDPOINTS = [
     '/newest',
     '/urls',
     '/ask',
+    '',
     '/upvotedComments',
     '/upvotedSubmissions'
 ]

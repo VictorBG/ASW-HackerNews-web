@@ -31,10 +31,10 @@ export const Threads = () => {
                 }
 
             }} pos={4}/>
-            <Loader resourceName={FETCH_THREAD}/>
+            <Loader resourceName={FETCH_LIST}/>
 
             <ContributionsContainer>
-                <ContributionsList list={list} likeClickRefetch={fetchThreads(id)}/>
+                <ContributionsList list={list.map(item => Object.assign({}, item, {title: item.content}))} likeClickRefetch={fetchThreads(id)}/>
             </ContributionsContainer>
         </>
     )
