@@ -1,19 +1,19 @@
 import React from 'react'
-import {Card} from '@rmwc/card'
-import {Typography} from '@rmwc/typography'
+import { Card } from '@rmwc/card'
+import { Typography } from '@rmwc/typography'
 import styled from 'styled-components'
-import {Button} from '@rmwc/button'
-import {formatTimeAgo} from '../../../common/utils/format/time'
-import {AskBadge} from './ask-badge'
-import {LinkBadge} from './link-badge'
-import {isLink, sanitizeUrl} from '../../../common/utils/format/text'
-import {IconButton} from '@rmwc/icon-button'
-import {Tooltip} from '@rmwc/tooltip'
-import {useDispatch} from "react-redux";
-import {useHistory} from 'react-router-dom'
-import {checkVote, fetchList} from "../duckies";
+import { Button } from '@rmwc/button'
+import { formatTimeAgo } from '../../../common/utils/format/time'
+import { AskBadge } from './ask-badge'
+import { LinkBadge } from './link-badge'
+import { isLink, sanitizeUrl } from '../../../common/utils/format/text'
+import { IconButton } from '@rmwc/icon-button'
+import { Tooltip } from '@rmwc/tooltip'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { checkVote } from '../duckies'
 
-export const ContributionsList = ({list, indexList}) => {
+export const ContributionsList = ({ list, likeClickRefetch, showBadges = true }) => {
 
     const history = useHistory()
 
@@ -23,7 +23,7 @@ export const ContributionsList = ({list, indexList}) => {
         history.push(`/user/${id}`)
     }
 
-    const onClickButton = (item) => (dispatch(checkVote(item, fetchList(indexList))))
+    const onClickButton = (item) => (dispatch(checkVote(item, likeClickRefetch)))
 
     return (
         <>
@@ -41,7 +41,9 @@ export const ContributionsList = ({list, indexList}) => {
                         <Typography use='headline5' tag='div'>{item.points}</Typography>
                     </LikeContainer>
                     <CardContainer>
+                        {!!showBadges &&
                         <AskBadge content={item.content}/>
+                        }
                         {isLink(item.content) &&
                         <StyledTitle use="headline6" tag="a" href={sanitizeUrl(item.content)} target="_blank">
                             {item.title}
@@ -50,8 +52,9 @@ export const ContributionsList = ({list, indexList}) => {
                         <StyledTitle use="headline6" tag="h2">
                             {item.title}
                         </StyledTitle>}
-
+                        {!!showBadges &&
                         <LinkBadge content={item.content}/>
+                        }
                         <CardContent>
                             <StyledUsernameButton
                                 label={item.user.username}
@@ -80,7 +83,6 @@ export const ContributionsList = ({list, indexList}) => {
         </>
     )
 }
-
 
 const ContributionCard = styled(Card)`
     margin-bottom: 20px;

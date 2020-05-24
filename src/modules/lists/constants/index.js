@@ -4,5 +4,3 @@ export const TABS_TITLES = [
     'Urls',
     'Ask'
 ]
-
-export const GET_LIST_SUCCEEDED = 'GET_LIST_SUCCEEDED'

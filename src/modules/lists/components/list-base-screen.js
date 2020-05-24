@@ -1,16 +1,16 @@
-import React, {useState} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {FETCH_LIST, fetchList} from '../duckies/index'
-import {ContributionsList} from './contributions-list'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { FETCH_LIST, fetchList } from '../duckies/index'
+import { ContributionsList } from './contributions-list'
 import styled from 'styled-components'
-import {Loader} from '../../../common/components/loader'
-import {ListToolbar} from './list-toolbar'
+import { Loader } from '../../../common/components/loader'
+import { ListToolbar } from './list-toolbar'
 
-export const ListScreen = () => {
+export const ListScreen = ({actualList = 0}) => {
     const dispatch = useDispatch()
     const list = useSelector(state => state.list || [])
 
-    const [index, setIndex] = useState(0)
+    const [index, setIndex] = useState(actualList)
 
     const fetch = index => {
         setIndex(index)
@@ -23,7 +23,7 @@ export const ListScreen = () => {
             <Loader resourceName={FETCH_LIST}/>
 
             <ContributionsContainer>
-                <ContributionsList list={list} indexList={index}/>
+                <ContributionsList list={list} likeClickRefetch={fetchList(index)}/>
             </ContributionsContainer>
         </>
     )
