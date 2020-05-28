@@ -174,11 +174,11 @@ export const UserProfileForm = () => {
                     </Divisor>
 
                     <ButtonContainer>
-                        <TextButton label="See my upvoted submissions"
+                        <TextButton label="Upvoted submissions"
                                     onClick={() => onUpVotedSubmissionsClick()}/>
                     </ButtonContainer>
                     <ButtonContainer>
-                        <TextButton label="See my upvoted comments"
+                        <TextButton label="Upvoted comments"
                                     onClick={() => onUpVotedCommentsClick()}/>
                     </ButtonContainer>
 

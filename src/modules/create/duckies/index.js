@@ -14,7 +14,11 @@ function * handlePostContribution ({ data }) {
     const {createSuccess, createError} = typesFor(POST_CONTRIBUTION)
     const [success] = yield race([take(createSuccess), take(createError)])
     if (success) {
-        data.h.push('/?id=1')
+        if (!success.data.inserted) {
+            data.h.push(`/item/${success.data.data.id}`)
+        } else {
+            data.h.push('/?id=1')
+        }
     }
 }
 
